@@ -1,0 +1,85 @@
+{
+  "id-duplicate": [
+    {
+      "id": 1,
+      "title": "json-server",
+      "author": "typicode"
+    },
+    {
+      "email": "fff@vvvvvv.com",
+      "id": 2
+    },
+    {
+      "email": "fff@vvvvvv.com",
+      "id": 3
+    },
+    {
+      "email": "fff@vvvvvv.com",
+      "id": 4
+    },
+    {
+      "email": "fff@vvvvvv.com",
+      "id": 5
+    },
+    {
+      "email": "fff@vvvvvv.com",
+      "id": 6
+    },
+    {
+      "email": "fff@vvvvvv.com",
+      "id": 7
+    },
+    {
+      "email": "fff@vvvvvv.com",
+      "id": 8
+    },
+    {
+      "email": "fff@vvvvvv.com",
+      "id": 9
+    },
+    {
+      "email": "fff@vvvvvv.com",
+      "id": 10
+    },
+    {
+      "email": "fff@vvvvvv.com",
+      "id": 11
+    },
+    {
+      "email": "fff@vvvvvv.com",
+      "id": 12
+    },
+    {
+      "email": "fff@vvvvvv.com",
+      "id": 13
+    }
+  ],
+  "name-duplicate": [
+    {
+      "id": 1,
+      "body": "some comment",
+      "postId": 1
+    },
+    {
+      "name": "333",
+      "id": 2
+    },
+    {
+      "name": "zzz",
+      "id": 3
+    },
+    {
+      "name": "aaaa",
+      "id": 4
+    },
+    {
+      "name": "aaaa",
+      "id": 5
+    }
+  ],
+  "signup": {
+    "email": "fff@vvvvvv.com",
+    "password": "1q2w3e4r",
+    "name": "aaaa"
+  }
+}
