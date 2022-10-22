@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import { setCookie } from "../../components/global/cookie";
+import { getCookie, setCookie } from "../../components/global/cookie";
 
 export const __validateEmail = createAsyncThunk(
     "VALIDATE_EMAIL",
@@ -43,8 +43,8 @@ export const __loginUser = createAsyncThunk(
     async(arg, thunkAPI) => {
         try{
             await axios.post("http://43.200.182.245:8080/api/login", arg)
-            .then((res)=> setCookie('email', res.check.data.AccessToken));
-            
+            .then((res)=> setCookie('email', res.data.check.data.accessToken));
+            console.log("____________res__________", getCookie('email') )
             return thunkAPI.fulfillWithValue(arg);
         } catch(e){
             return thunkAPI.rejectWithValue(e)
@@ -122,7 +122,8 @@ const userSlice = createSlice({
     [__loginUser.fulfilled]: (state, action) => {
         state.isLoading = false;
         state.isLogin = true;
-        alert(`${action.paylod.email}님 환영합니다.`)
+        console.log("_______pay_________", action.payload)
+        alert(`${action.payload.email}님 환영합니다.`)
     },
     [__loginUser.rejected]: (state, action) => {
         state.isLoading = false; 
