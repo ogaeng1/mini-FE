@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { useDispatch } from "react-redux";
 import { __loginUser } from "../../redux/modules/userSlice";
+import { getCookie } from "../global/cookie";
+import { useNavigate } from "react-router-dom";
 
 const LoginForm = ({setShowInput}) => {
-
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const initialState = {
     Email: "",
@@ -23,14 +25,15 @@ const LoginForm = ({setShowInput}) => {
         email: user.Email,
       password: user.password,
     }));
+    navigate("/");
   };
-
+  console.log(getCookie('email'))
   return (
     <FormSection onSubmit={onSubmitHandler}>
         <h1>항해그램 로그인</h1>
             <label>
                 <p>아이디</p>
-                <Input value={user.Email} name="eMail" type="text" placeholder="아이디를 입력해주세요" onChange={onChangeHandler} />
+                <Input value={user.Email} name="Email" type="text" placeholder="아이디를 입력해주세요" onChange={onChangeHandler} />
             </label>
             <label >
                 <p>비밀번호</p>

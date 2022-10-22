@@ -6,7 +6,7 @@ export const __validateEmail = createAsyncThunk(
     "VALIDATE_EMAIL",
     async(arg, thunkAPI) => {
         try{
-            const {result} = await axios.post("http://localhost:3001/id-duplicate", arg);
+            const {result} = await axios.post("http://43.200.182.245:8080/api/id-duplicate", arg);
             return thunkAPI.fulfillWithValue(result);
         } catch(e){
             return thunkAPI.rejectWithValue(e)
@@ -18,7 +18,7 @@ export const __validateName = createAsyncThunk(
     "VALIDATE_NAME",
     async(arg, thunkAPI) => {
         try{
-            const {result} = await axios.post("http://localhost:3001/name-duplicate", arg);
+            const {result} = await axios.post("http://43.200.182.245:8080/api/name-duplicate", arg);
             return thunkAPI.fulfillWithValue(result);
         } catch(e){
             return thunkAPI.rejectWithValue(e)
@@ -30,7 +30,7 @@ export const __addUser = createAsyncThunk(
     "ADD_USER",
     async(arg, thunkAPI) => {
         try{
-            axios.post("http://localhost:3001/signup", arg);
+            axios.post("http://43.200.182.245:8080/api/signup", arg);
             return thunkAPI.fulfillWithValue(arg);
         } catch(e){
             return thunkAPI.rejectWithValue(e)
@@ -42,8 +42,9 @@ export const __loginUser = createAsyncThunk(
     "LOGIN_USER",
     async(arg, thunkAPI) => {
         try{
-            await axios.post("http://localhost:3001/login", arg)
+            await axios.post("http://43.200.182.245:8080/api/login", arg)
             .then((res)=> setCookie('email', res.check.data.AccessToken));
+            
             return thunkAPI.fulfillWithValue(arg);
         } catch(e){
             return thunkAPI.rejectWithValue(e)
@@ -55,6 +56,7 @@ const initialState = {
     result: "",
     isLoading: false,
     message: "",
+    isLogin: false,
     data: {
         AccessToken:null,
         RefreshTokken:null,
@@ -119,6 +121,7 @@ const userSlice = createSlice({
     },
     [__loginUser.fulfilled]: (state, action) => {
         state.isLoading = false;
+        state.isLogin = true;
         alert(`${action.paylod.email}님 환영합니다.`)
     },
     [__loginUser.rejected]: (state, action) => {

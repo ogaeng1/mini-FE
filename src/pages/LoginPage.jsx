@@ -7,7 +7,6 @@ import SignUpForm from "../components/user/SignUpForm";
 
 const LoginPage = () => {
     const [showInput, setShowInput] = useState(false)
-
     return (
     <Layout>
        <Stcontainer>
