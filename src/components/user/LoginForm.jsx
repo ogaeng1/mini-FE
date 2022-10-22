@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { useDispatch } from "react-redux";
-import { __loginUser } from "../../redux/modules/userSlice";
-import { getCookie } from "../global/cookie";
+import {loginState, __loginUser } from "../../redux/modules/userSlice";
 import { useNavigate } from "react-router-dom";
 
 const LoginForm = ({setShowInput}) => {
@@ -26,8 +25,9 @@ const LoginForm = ({setShowInput}) => {
       password: user.password,
     }));
     navigate("/");
+    dispatch(loginState())
   };
-  console.log(getCookie('email'))
+
   return (
     <FormSection onSubmit={onSubmitHandler}>
         <h1>항해그램 로그인</h1>
