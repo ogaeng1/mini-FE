@@ -4,13 +4,16 @@ import GlobalStyles from "./components/global/GlobalStyle";
 import { Provider } from "react-redux";
 import store from "./redux/configStore";
 import App from "./App";
+import { CookiesProvider } from "react-cookie";
 
 
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <Provider store={store}>
-    <App />
-    <GlobalStyles />
+    <CookiesProvider>
+      <App />
+      <GlobalStyles />
+    </CookiesProvider>
   </Provider>
 );

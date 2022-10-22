@@ -3,17 +3,21 @@ import styled from "styled-components";
 import Header from "./Header";
 
 const LayoutContainer = styled.div`
-  max-width: 1200px;
-  min-width: 800px;
-  margin: 0 auto;
-  padding: 10px 0px;
+  max-width: 100%;
+  min-width: 100%;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  background-color: #fafafa;
 `;
 
 function Layout({ children }) {
   return (
     <>
-      <Header />
-      <LayoutContainer>{children}</LayoutContainer>
+      <LayoutContainer>
+        <Header />
+        {children}
+      </LayoutContainer>
     </>
   );
 
