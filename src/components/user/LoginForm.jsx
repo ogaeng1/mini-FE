@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { useDispatch } from "react-redux";
-import { loginUser } from "../../redux/modules/userSlice";
+import { __loginUser } from "../../redux/modules/userSlice";
 
 const LoginForm = ({setShowInput}) => {
 
@@ -19,8 +19,8 @@ const LoginForm = ({setShowInput}) => {
 
   const onSubmitHandler = (e) => {
     e.preventDefault();
-    dispatch(loginUser({
-        Email: user.Email,
+    dispatch(__loginUser({
+        email: user.Email,
       password: user.password,
     }));
   };
