@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import { getCookie, setCookie } from "../../components/global/cookie";
+import { setCookie } from "../../components/global/cookie";
+
 
 export const __validateEmail = createAsyncThunk(
     "VALIDATE_EMAIL",
@@ -43,8 +44,7 @@ export const __loginUser = createAsyncThunk(
     async(arg, thunkAPI) => {
         try{
             await axios.post("http://43.200.182.245:8080/api/login", arg)
-            .then((res)=> setCookie('email', res.data.check.data.accessToken));
-            console.log("____________res__________", getCookie('email') )
+            .then((res)=> setCookie('token', res.data.check.data.accessToken));
             return thunkAPI.fulfillWithValue(arg);
         } catch(e){
             return thunkAPI.rejectWithValue(e)
@@ -57,16 +57,19 @@ const initialState = {
     isLoading: false,
     message: "",
     isLogin: false,
-    data: {
-        AccessToken:null,
-        RefreshTokken:null,
-    }
 };
 
 const userSlice = createSlice({
   name: "user",
   initialState,
-  reducers: {},
+  reducers: {
+    loginState:(state)=>{
+        state.isLogin = true;
+    },
+    logoutState:(state) =>{
+        state.isLogin = false;
+    }
+  },
   extraReducers: {
     [__validateEmail.pending]: (state, action) => {
         state.isLoading = true; 
@@ -122,7 +125,6 @@ const userSlice = createSlice({
     [__loginUser.fulfilled]: (state, action) => {
         state.isLoading = false;
         state.isLogin = true;
-        console.log("_______pay_________", action.payload)
         alert(`${action.payload.email}님 환영합니다.`)
     },
     [__loginUser.rejected]: (state, action) => {
@@ -131,5 +133,5 @@ const userSlice = createSlice({
     },
   }
 });
-
+export const { loginState, logoutState } = userSlice.actions
 export default userSlice.reducer;
