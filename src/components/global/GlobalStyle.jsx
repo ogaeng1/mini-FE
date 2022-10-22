@@ -28,7 +28,7 @@ const GlobalStyles = createGlobalStyle`
         display: block;
     }
     body {
-        line-height: 1;
+        line-height: 1.5;
     }
     ol, ul {
         list-style: none;
@@ -45,7 +45,10 @@ const GlobalStyles = createGlobalStyle`
         border-collapse: collapse;
         border-spacing: 0;
     }
-    body{
+    body {
+        font-family: 'Fuzzy Bubbles', cursive;
+    }
+    * {
         font-family: 'Fuzzy Bubbles', cursive;
     }
 `; 
