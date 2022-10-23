@@ -33,13 +33,7 @@ const SignUpForm = ({setShowInput}) => {
         } else {
           dispatch(
             __validateEmail({ email: user.Email }) 
-          )
-<<<<<<< HEAD
-=======
-          const validatedEmail = sessionStorage.getItem("EmailValid")
-          setValidateEmail(validatedEmail)
->>>>>>> help
-        }
+        )}
       };
 
       const onValidateNameHandler = () => {

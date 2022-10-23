@@ -7,49 +7,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { loginState, logoutState } from "../../redux/modules/userSlice";
 
 const Header = () => {
-<<<<<<< HEAD
-    const {isLogin} = useSelector(state => state.user)
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
-    console.log(isLogin)
-    const onClick = () => {
-        if(isLogin){
-            navigate("/post")
-        } else{
-        alert("새글을 작성하기 위해 로그인 해주세요.")
-        navigate("/login")
-        }
-    }
-
-    const onLogoutHandler = () => {
-        removeCookie('token');
-        dispatch(logoutState())
-    };
-
-    useEffect(() => {
-      if(getCookie('token')){
-        dispatch(loginState())
-      } else {
-        dispatch(logoutState())
-      }
-    },)
-
-    return (
-        <HeaderContainer>
-            <StLink to="/">
-                <BsInstagram style={{margin:'0 20px 0 50px'}}/>
-                <h1 style={{margin:'3px 0 0 0'}}>항해그램</h1>
-            </StLink>
-            <StBtns>
-                {isLogin ? 
-                <UserBtn onClick={()=> onLogoutHandler()}>로그아웃</UserBtn> 
-                : <UserBtn onClick={() => navigate("/login")} >로그인</UserBtn> }
-                <UserBtn onClick={() => onClick()}>작성하기</UserBtn>
-            </StBtns>
-
-        </HeaderContainer>
-    );
-=======
 const {isLogin} = useSelector(state => state.user)
 const navigate = useNavigate();
 const dispatch = useDispatch();
@@ -89,7 +46,6 @@ return (
 
     </HeaderContainer>
 );
->>>>>>> help
 }
 
 export default Header;

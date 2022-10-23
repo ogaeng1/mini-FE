@@ -1,12 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-<<<<<<< HEAD
 import { useDispatch, useSelector } from "react-redux";
 import {loginState, logoutState, __loginUser } from "../../redux/modules/userSlice";
-=======
-import { useDispatch } from "react-redux";
-import {loginState, __loginUser } from "../../redux/modules/userSlice";
->>>>>>> help
 import { useNavigate } from "react-router-dom";
 
 const LoginForm = ({setShowInput}) => {
@@ -24,7 +19,6 @@ const onChangeHandler = (event) => {
   setUser({ ...user, [name]: value });
 };
 
-<<<<<<< HEAD
   const onSubmitHandler = (e) => {
     e.preventDefault();
     dispatch(__loginUser({
@@ -44,19 +38,6 @@ const onChangeHandler = (event) => {
   },[isLogin])
 
   return (
-=======
-const onSubmitHandler = (e) => {
-  e.preventDefault();
-  dispatch(__loginUser({
-  email: user.Email,
-  password: user.password,
-  }));
-  navigate("/");
-  dispatch(loginState())
-};
-
-return (
->>>>>>> help
     <FormSection onSubmit={onSubmitHandler}>
       <h1>항해그램 로그인</h1>
       <label>

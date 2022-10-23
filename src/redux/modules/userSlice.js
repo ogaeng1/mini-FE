@@ -10,19 +10,11 @@ export const __validateEmail = createAsyncThunk(
             const {result} = await axios.post("http://43.200.182.245:8080/api/id-duplicate", arg)
             .then(res => res.data);
             if(result){
-<<<<<<< HEAD
                 sessionStorage.setItem("EmailValid", true);
                 alert("사용가능한 아이디입니다.");
             } else{
                 sessionStorage.setItem("EmailValid", false);
                 alert("사용불가능한 아이디입니다.");
-=======
-                alert("사용가능한 아이디입니다.");
-                sessionStorage.setItem("EmailValid", true)
-            } else{
-                alert("사용불가능한 아이디입니다.");
-                sessionStorage.setItem("EmailValid", false)
->>>>>>> help
             }
             return thunkAPI.fulfillWithValue(result);
         } catch(e){
@@ -38,21 +30,12 @@ export const __validateName = createAsyncThunk(
             const {result} = await axios.post("http://43.200.182.245:8080/api/name-duplicate", arg)
             .then(res => res.data);;
             if(result) {
-<<<<<<< HEAD
                 sessionStorage.setItem("nameValid", true);
                 alert("사용 가능한 닉네임입니다.");
             } else {
                 sessionStorage.setItem("nameValid", false);
                 alert("사용 불가능한 닉네임입니다.");
             }
-=======
-                alert("사용 가능한 닉네임입니다.");
-                sessionStorage.setItem("nameValid", true)
-                } else {
-                alert("사용 불가능한 닉네임입니다.");
-                sessionStorage.setItem("nameValid", false)
-                }
->>>>>>> help
             return thunkAPI.fulfillWithValue(result);
         } catch(e){
             return thunkAPI.rejectWithValue(e)
@@ -92,11 +75,8 @@ const initialState = {
     isLoading: false,
     message: "",
     isLogin: false,
-<<<<<<< HEAD
     validateEmail: false,
     validateName: false,
-=======
->>>>>>> help
 };
 
 const userSlice = createSlice({
@@ -108,7 +88,6 @@ const userSlice = createSlice({
     },
     logoutState:(state) =>{
         state.isLogin = false;
-<<<<<<< HEAD
     },
     validateEmailChange:(state)=>{
         state.validateEmail = false;
@@ -117,9 +96,6 @@ const userSlice = createSlice({
         state.validateName = false;
     }
 
-=======
-    }
->>>>>>> help
   },
   extraReducers: {
     [__validateEmail.pending]: (state, action) => {
@@ -127,12 +103,9 @@ const userSlice = createSlice({
     },
     [__validateEmail.fulfilled]: (state, action) => {
         state.isLoading = false;
-<<<<<<< HEAD
-        if(action.payload){state.validateEmail = true;}
-        else {state.validateEmail = false;}
+        if(action.payload){state.validateEmail = true}
+        else {state.validateEmail = false}
         
-=======
->>>>>>> help
     },
     [__validateEmail.rejected]: (state, action) => {
         state.isLoading = false; 
@@ -144,11 +117,8 @@ const userSlice = createSlice({
     },
     [__validateName.fulfilled]: (state, action) => {
         state.isLoading = false;
-<<<<<<< HEAD
         if(action.payload){state.validateName = true;}
         else {state.validateName = false;}
-=======
->>>>>>> help
     },
     [__validateName.rejected]: (state, action) => {
         state.isLoading = false; 
@@ -183,9 +153,5 @@ const userSlice = createSlice({
     },
   }
 });
-<<<<<<< HEAD
 export const { loginState, logoutState, validateEmailChange, validateNameChange } = userSlice.actions
-=======
-export const { loginState, logoutState } = userSlice.actions
->>>>>>> help
 export default userSlice.reducer;
