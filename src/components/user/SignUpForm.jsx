@@ -40,7 +40,7 @@ const SignUpForm = ({setShowInput}) => {
               }
             ) 
           )
-          let validatedEmail = sessionStorage.getItem("EmailValid")
+          const validatedEmail = sessionStorage.getItem("EmailValid")
           setValidateEmail(validatedEmail)
         }
       };
@@ -217,6 +217,7 @@ const StFormSection = styled.div`
   align-items: center;
   border-radius: 5px;
   padding: 15px 0;
+  margin-top: 150px;
   h1 {
     font-family: "Black Han Sans", sans-serif;
     margin-bottom: 40px;

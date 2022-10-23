@@ -1,9 +1,11 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import logger from "redux-logger";
-import user from "../modules/userSlice"
+import user from "./userSlice";
+import post from "./postSlice";
 
 const reducer = combineReducers({
-  user
+  user,
+  post
 });
 
 export default configureStore({
