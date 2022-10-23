@@ -10,12 +10,14 @@ const Header = () => {
     const {isLogin} = useSelector(state => state.user)
     const navigate = useNavigate();
     const dispatch = useDispatch();
-
+    console.log(isLogin)
     const onClick = () => {
-        if(!getCookie('token')){
-            alert("새글을 작성하기 위해 로그인 해주세요.")
-            navigate("/login")
-        } else{navigate("/")}
+        if(isLogin){
+            navigate("/post")
+        } else{
+        alert("새글을 작성하기 위해 로그인 해주세요.")
+        navigate("/login")
+        }
     }
 
     const onLogoutHandler = () => {
