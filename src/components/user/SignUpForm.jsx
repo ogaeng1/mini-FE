@@ -1,8 +1,8 @@
 import React from "react";
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { __addUser, __validateEmail, __validateName } from "../../redux/modules/userSlice";
+import { validateEmailChange, validateNameChange, __addUser, __validateEmail, __validateName } from "../../redux/modules/userSlice";
 
 const SignUpForm = ({setShowInput}) => {
     const initialState = {
@@ -11,14 +11,12 @@ const SignUpForm = ({setShowInput}) => {
         passwordConfirm: "",
         name: "",
       };
-    
+      const {validateEmail,validateName} = useSelector(state => state.user)
       const dispatch = useDispatch();
       const [emChk, setEmChk] = useState(false);    
       const [pwChk, setPwChk] = useState(false);
       const [pwcfChk, setPwcfChk] = useState(false);
       const [nameChk, setNameChk] = useState(false);
-      const [validateEmail, setValidateEmail] = useState(false);
-      const [validateName, setValidateName] = useState(false);
       const [user, setUser] = useState(initialState);
       const regPw = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,20}$/;
       const regEmail = /^[A-Za-z0-9_]+[A-Za-z0-9]*[@]{1}[A-Za-z0-9]+[A-Za-z0-9]*[.]{1}[A-Za-z]{1,3}$/;
@@ -34,14 +32,8 @@ const SignUpForm = ({setShowInput}) => {
           alert("아이디를 입력해주세요!")
         } else {
           dispatch(
-            __validateEmail(
-              {
-                email: user.Email
-              }
-            ) 
+            __validateEmail({ email: user.Email }) 
           )
-          let validatedEmail = sessionStorage.getItem("EmailValid")
-          setValidateEmail(validatedEmail)
         }
       };
 
@@ -50,14 +42,8 @@ const SignUpForm = ({setShowInput}) => {
           alert("아이디를 입력해주세요!")
         } else {
           dispatch(
-            __validateName(
-              {
-                name: user.name
-              }
-            ) 
+            __validateName({ name: user.name }) 
           )
-          let validatedName = sessionStorage.getItem("nameValid")
-          setValidateName(validatedName)
         }
       };
 
@@ -88,7 +74,7 @@ const SignUpForm = ({setShowInput}) => {
         } else {
           setEmChk(false);
         };
-        setValidateEmail(false)
+        dispatch(validateEmailChange())
       }, [user.Email]);
 
       useEffect(() => {
@@ -113,7 +99,7 @@ const SignUpForm = ({setShowInput}) => {
         } else {
           setNameChk(false);
         };
-        setValidateName(false)
+        dispatch(validateNameChange());
       }, [user.name]);
 
       return (
@@ -217,6 +203,7 @@ const StFormSection = styled.div`
   align-items: center;
   border-radius: 5px;
   padding: 15px 0;
+  margin-top: 150px;
   h1 {
     font-family: "Black Han Sans", sans-serif;
     margin-bottom: 40px;
