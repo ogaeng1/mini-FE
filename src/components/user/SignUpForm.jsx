@@ -34,6 +34,11 @@ const SignUpForm = ({setShowInput}) => {
           dispatch(
             __validateEmail({ email: user.Email }) 
           )
+<<<<<<< HEAD
+=======
+          const validatedEmail = sessionStorage.getItem("EmailValid")
+          setValidateEmail(validatedEmail)
+>>>>>>> help
         }
       };
 
