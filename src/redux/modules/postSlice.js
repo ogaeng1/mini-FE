@@ -2,29 +2,22 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { getCookie } from "../../components/global/cookie";
 
-const headers = {
-    'Content-Type': 'multipart/form-data',
-    'Authorization': `Bearer ${getCookie('token')}`,
-    'withCredentials': true,
-}
-
 const initialState = {
-    title: "",
-    content: "",
-    img: "",
-    post:[],
+    posts: [],
 }
 
 
 //게시글 작성
 export const __postFeed = createAsyncThunk("CREATE_POST", async(payload, thunkAPI) => {
-    console.log("______payload_______",payload)
     try {
-        const response = await axios.post("http://43.200.182.245:8080/api/post", payload, {
-            headers: headers
-        }) ;
-
-        return thunkAPI.fulfillWithValue(response.data);
+        const {data} = await axios.post("http://43.200.182.245:8080/api/post", payload, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `Bearer ${getCookie('token')}`,
+                'withCredentials': true,
+            }
+        }).then((res)=>res.data.check)
+        return thunkAPI.fulfillWithValue(data);
     } catch(err) {
         return err;
     }
@@ -56,7 +49,7 @@ const postSlice = createSlice({
     reducers: {},
     extraReducers: {
         [__postFeed.fulfilled]: (state, action) => {
-            state.post = [...state.post, action.payload];
+            state.posts = [...state.posts, action.payload];
         },
         [__postFeed.rejected]: (state, action) => {
             state.err = action.payload;
@@ -66,8 +59,7 @@ const postSlice = createSlice({
         },
         [__getPost.fulfilled]: (state, action) => {
             state.isLoading = false;
-            console.log(action.payload);
-            state.posts.push(...action.payload.content);
+             state.posts.push(...action.payload.content);
         },
         [__getPost.rejected]: (state, action) => {
             state.isLoading = false;
