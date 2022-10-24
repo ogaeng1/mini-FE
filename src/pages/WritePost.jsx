@@ -13,7 +13,6 @@ const Write = () => {
     const initialState = {
         title: "",
         content: "",
-        img: ""
     };
 
     const [post, setPost] = useState(initialState);
@@ -28,27 +27,24 @@ const Write = () => {
     const saveFileImage = (e) => {
         setImgSave(URL.createObjectURL(e.target.files[0]));
     };
+    console.log("______File______", imgSave)
 
-    const onPostingHandler = async (e) => {    
-        e.preventDefault();
-        let formData = new FormData();
-        let postimage = document.getElementById("img_file");
-        formData.append(
-          "postCreateRequestDto",
-          new Blob([JSON.stringify(post)], { type: "application/json" })
-        );
-        formData.append("file", postimage.files[0]);
-          try {
-            const response = await dispatch(__postFeed(formData))
-            if(response){
-              alert("등록 완료");
-              navigate(`/`)
-            }
-          }
-          catch (error){
-            return error;
-          }
-      };
+
+    const onPostingHandler = (e) => {    
+      e.preventDefault();
+      let formData = new FormData();
+      let postimage = document.getElementById("img_file");
+      formData.append(
+        "postCreateRequestDto",
+        new Blob([JSON.stringify(post)], { type: "application/json" })
+      );
+      
+      formData.append("file", postimage.files[0]);
+       
+      dispatch(__postFeed(formData))
+
+    };
+
 
     return (
         <WriteWrap>

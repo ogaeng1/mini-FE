@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { useDispatch } from "react-redux";
-import {loginState, __loginUser } from "../../redux/modules/userSlice";
+import { useDispatch, useSelector } from "react-redux";
+import {loginState, logoutState, __loginUser } from "../../redux/modules/userSlice";
 import { useNavigate } from "react-router-dom";
 
 const LoginForm = ({setShowInput}) => {
+  const {isLogin} = useSelector(state => state.user)
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const initialState = {
@@ -18,17 +19,25 @@ const onChangeHandler = (event) => {
   setUser({ ...user, [name]: value });
 };
 
-const onSubmitHandler = (e) => {
-  e.preventDefault();
-  dispatch(__loginUser({
-  email: user.Email,
-  password: user.password,
-  }));
-  navigate("/");
-  dispatch(loginState())
-};
+  const onSubmitHandler = (e) => {
+    e.preventDefault();
+    dispatch(__loginUser({
+        email: user.Email,
+      password: user.password,
+    }));
+  };
+  
+  useEffect(()=>{
+    if(isLogin){
+      navigate("/");
+      dispatch(loginState());
+    }else{
+      navigate("/login");
+      dispatch(logoutState());
+    };
+  },[isLogin])
 
-return (
+  return (
     <FormSection onSubmit={onSubmitHandler}>
       <h1>항해그램 로그인</h1>
       <label>
