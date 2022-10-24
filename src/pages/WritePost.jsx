@@ -34,11 +34,10 @@ const Write = () => {
         let formData = new FormData();
         let postimage = document.getElementById("img_file");
         formData.append(
-          "data",
+          "postCreateRequestDto",
           new Blob([JSON.stringify(post)], { type: "application/json" })
         );
-        console.log(postimage)
-        formData.append("image", postimage.files[0]);
+        formData.append("file", postimage.files[0]);
           try {
             const response = await dispatch(__postFeed(formData))
             if(response){
@@ -47,7 +46,7 @@ const Write = () => {
             }
           }
           catch (error){
-            console.log(error)
+            return error;
           }
       };
 

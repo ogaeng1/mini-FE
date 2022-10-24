@@ -1,19 +1,24 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import { getCookie } from "../../components/global/cookie";
 
 const headers = {
-    'Content-Type': 'multipart/form-data'
+    'Content-Type': 'multipart/form-data',
+    'Authorization': `Bearer ${getCookie('token')}`,
+    'withCredentials': true,
 }
 
 const initialState = {
     title: "",
     content: "",
-    img: ""
+    img: "",
+    post:[],
 }
 
 
 //게시글 작성
 export const __postFeed = createAsyncThunk("CREATE_POST", async(payload, thunkAPI) => {
+    console.log("______payload_______",payload)
     try {
         const response = await axios.post("http://43.200.182.245:8080/api/post", payload, {
             headers: headers
@@ -25,7 +30,7 @@ export const __postFeed = createAsyncThunk("CREATE_POST", async(payload, thunkAP
     }
 })
 
-// 메인화면 게시글 목록 불러오기
+//메인화면 게시글 목록 불러오기
 export const __getPost = createAsyncThunk("GET_POST", async(_, thunkAPI) => {
     try {
         const response = await axios.get("http://43.200.182.245:8080/api/post");
@@ -47,7 +52,7 @@ export const __getDetailPost = createAsyncThunk("GET_DETAIL_POST", async(postId,
 
 const postSlice = createSlice({
     name: "post",
-    initialState: {},
+    initialState,
     reducers: {},
     extraReducers: {
         [__postFeed.fulfilled]: (state, action) => {
