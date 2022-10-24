@@ -10,17 +10,24 @@ const Header = () => {
 const {isLogin} = useSelector(state => state.user)
 const navigate = useNavigate();
 const dispatch = useDispatch();
+console.log(window.location.pathname)
 
 const onClick = () => {
-    if(!getCookie('token')){
+    if(isLogin){
+        navigate("/write")
+    } else{
         alert("새글을 작성하기 위해 로그인 해주세요.")
         navigate("/login")
-    } else{navigate("/write")}
+    }
 }
 
 const onLogoutHandler = () => {
     removeCookie('token');
     dispatch(logoutState())
+    if(window.location.pathname==="/write"){
+        alert("새글을 작성하기 위해 로그인 해주세요.")
+        navigate("/login")
+    }
 };
 
 useEffect(() => {
@@ -29,7 +36,9 @@ useEffect(() => {
         } else {
         dispatch(logoutState())
         }
+
 },)
+
 
 return (
     <HeaderContainer>

@@ -93,9 +93,27 @@
       "id": 7
     }
   ],
-  "signup": {
-    "email": "fff@vvvvvv.com",
-    "password": "1q2w3e4r",
-    "name": "aaaa"
-  }
+  "post": [
+    {
+      "postId": "1",
+      "title": "화창한 토요일",
+      "content": "여행가고 싶다",
+      "img": "",
+      "name": "점례씨",
+      "createTime": 0,
+      "likeNum": 0,
+      "commentNum": 0
+    },
+    {
+      "postId": "2",
+      "title": "한가한 일요일",
+      "content": "쉬고 싶다",
+      "img": "",
+      "name": "남생이",
+      "createTime": 0,
+      "likeNum": 0,
+      "commentNum": 0
+    }
+  ]
+
 }

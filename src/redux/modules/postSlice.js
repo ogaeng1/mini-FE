@@ -2,43 +2,39 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { getCookie } from "../../components/global/cookie";
 
-const headers = {
-    'Content-Type': 'multipart/form-data',
-    'Authorization': `Bearer ${getCookie('token')}`,
-    'withCredentials': true,
-}
-
 const initialState = {
-    title: "",
-    content: "",
-    img: "",
-    post:[],
+    posts: [],
+    post: [
+        {
+          postId: "",
+          title: "",
+          content: "",
+          img: "",
+          name: "",
+          createTime: 0,
+          likeNum: 0,
+          commentNum: 0,
+        },
+      ],
+    
 }
 
 
 //게시글 작성
 export const __postFeed = createAsyncThunk("CREATE_POST", async(payload, thunkAPI) => {
-    console.log("______payload_______",payload)
     try {
-        const response = await axios.post("http://43.200.182.245:8080/api/post", payload, {
-            headers: headers
-        }) ;
-
-        return thunkAPI.fulfillWithValue(response.data);
+        const {data} = await axios.post("http://43.200.182.245:8080/api/post", payload, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `Bearer ${getCookie('token')}`,
+                'withCredentials': true,
+            }
+        }).then((res)=>res.data.check)
+        return thunkAPI.fulfillWithValue(data);
     } catch(err) {
         return err;
     }
 })
-
-//메인화면 게시글 목록 불러오기
-export const __getPost = createAsyncThunk("GET_POST", async(_, thunkAPI) => {
-    try {
-        const response = await axios.get("http://43.200.182.245:8080/api/post");
-        return thunkAPI.fulfillWithValue(response.data);
-    } catch(err) {
-        return thunkAPI.rejectWithValue(err.message);
-    }
-});
 
 //게시글 상세 페이지 이동
 export const __getDetailPost = createAsyncThunk("GET_DETAIL_POST", async(postId, thunkAPI) => {
@@ -50,13 +46,31 @@ export const __getDetailPost = createAsyncThunk("GET_DETAIL_POST", async(postId,
     }
 });
 
+//혜민님 부분
+export const __getPost = createAsyncThunk(
+    "post/getPost",
+    async (_, thunkAPI) => {
+      try {
+        const result = await axios.get("http://localhost:3003/post");
+        //axios를 통해 db.json에 있는 정보를 불러온 것
+        //console.log("thunk에서 보낸다", result);
+        return thunkAPI.fulfillWithValue(result.data);
+        //성공하면 result.data를 보내고
+      } catch (error) {
+        // console.log(error);
+        return thunkAPI.rejectWithValue(error);
+      }
+    }
+  );
+  
+
 const postSlice = createSlice({
     name: "post",
     initialState,
     reducers: {},
     extraReducers: {
         [__postFeed.fulfilled]: (state, action) => {
-            state.post = [...state.post, action.payload];
+            state.posts = [...state.posts, action.payload];
         },
         [__postFeed.rejected]: (state, action) => {
             state.err = action.payload;
@@ -66,13 +80,23 @@ const postSlice = createSlice({
         },
         [__getPost.fulfilled]: (state, action) => {
             state.isLoading = false;
-            console.log(action.payload);
-            state.posts.push(...action.payload.content);
+             state.posts.push(...action.payload.content);
         },
         [__getPost.rejected]: (state, action) => {
             state.isLoading = false;
             state.error = action.payload;
         },
+
+        [__getPost.pending]: (state) => {
+            state.isLoading = true;
+        },
+        [__getPost.fulfilled]: (state, action) => {
+        state.post = action.payload;
+        },
+        [__getPost.rejected]: (state, action) => {
+        state.error = action.payload;
+        },
+      
         
         // [__getPost.pending]: (state, action) => {
         //     state.isLoading = true;
