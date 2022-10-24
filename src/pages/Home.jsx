@@ -15,7 +15,7 @@ const Home = () => {
   }, [dispatch]);
 
   const post = useSelector((state) => state.main.post);
-  console.log(post);
+
   return (
     <Layout>
       {post.map((post) => (
