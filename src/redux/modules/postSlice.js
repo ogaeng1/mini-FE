@@ -30,7 +30,7 @@ export const __postFeed = createAsyncThunk("CREATE_POST", async(payload, thunkAP
     }
 })
 
-// 메인화면 게시글 목록 불러오기
+//메인화면 게시글 목록 불러오기
 export const __getPost = createAsyncThunk("GET_POST", async(_, thunkAPI) => {
     try {
         const response = await axios.get("http://43.200.182.245:8080/api/post");

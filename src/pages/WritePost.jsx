@@ -45,6 +45,7 @@ const Write = () => {
 
     };
 
+
     return (
         <WriteWrap>
             <WriteBox enctype="multipart/form-data" onSubmit={onPostingHandler}>
