@@ -1,4 +1,4 @@
-import {createGlobalStyle} from "styled-components";
+import { createGlobalStyle } from "styled-components";
 
 const GlobalStyles = createGlobalStyle`
 @import url('https://fonts.googleapis.com/css2?family=Fuzzy+Bubbles&display=swap');
@@ -28,7 +28,7 @@ const GlobalStyles = createGlobalStyle`
         display: block;
     }
     body {
-        line-height: 1;
+        line-height: 1.5;
     }
     ol, ul {
         list-style: none;
@@ -48,6 +48,6 @@ const GlobalStyles = createGlobalStyle`
     body{
         font-family: 'Fuzzy Bubbles', cursive;
     }
-`; 
+`;
 
 export default GlobalStyles;
