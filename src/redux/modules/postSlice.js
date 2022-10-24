@@ -4,6 +4,19 @@ import { getCookie } from "../../components/global/cookie";
 
 const initialState = {
     posts: [],
+    post: [
+        {
+          postId: "",
+          title: "",
+          content: "",
+          img: "",
+          name: "",
+          createTime: 0,
+          likeNum: 0,
+          commentNum: 0,
+        },
+      ],
+    
 }
 
 
@@ -23,16 +36,6 @@ export const __postFeed = createAsyncThunk("CREATE_POST", async(payload, thunkAP
     }
 })
 
-// 메인화면 게시글 목록 불러오기
-export const __getPost = createAsyncThunk("GET_POST", async(_, thunkAPI) => {
-    try {
-        const response = await axios.get("http://43.200.182.245:8080/api/post");
-        return thunkAPI.fulfillWithValue(response.data);
-    } catch(err) {
-        return thunkAPI.rejectWithValue(err.message);
-    }
-});
-
 //게시글 상세 페이지 이동
 export const __getDetailPost = createAsyncThunk("GET_DETAIL_POST", async(postId, thunkAPI) => {
     try {
@@ -42,6 +45,24 @@ export const __getDetailPost = createAsyncThunk("GET_DETAIL_POST", async(postId,
         return thunkAPI.rejectWithValue(err);
     }
 });
+
+//혜민님 부분
+export const __getPost = createAsyncThunk(
+    "post/getPost",
+    async (_, thunkAPI) => {
+      try {
+        const result = await axios.get("http://localhost:3003/post");
+        //axios를 통해 db.json에 있는 정보를 불러온 것
+        //console.log("thunk에서 보낸다", result);
+        return thunkAPI.fulfillWithValue(result.data);
+        //성공하면 result.data를 보내고
+      } catch (error) {
+        // console.log(error);
+        return thunkAPI.rejectWithValue(error);
+      }
+    }
+  );
+  
 
 const postSlice = createSlice({
     name: "post",
@@ -65,6 +86,17 @@ const postSlice = createSlice({
             state.isLoading = false;
             state.error = action.payload;
         },
+
+        [__getPost.pending]: (state) => {
+            state.isLoading = true;
+        },
+        [__getPost.fulfilled]: (state, action) => {
+        state.post = action.payload;
+        },
+        [__getPost.rejected]: (state, action) => {
+        state.error = action.payload;
+        },
+      
         
         // [__getPost.pending]: (state, action) => {
         //     state.isLoading = true;
