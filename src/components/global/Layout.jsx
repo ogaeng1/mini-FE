@@ -5,8 +5,9 @@ import Header from "./Header";
 const LayoutContainer = styled.div`
   max-width: 100%;
   min-width: 100%;
-  height: 100%;
-  margin: 0;
+  max-height: 100%;
+  min-height: 94vh;
+  margin: 54px 0 0 0;
   padding: 0;
   background-color: #fafafa;
 `;
