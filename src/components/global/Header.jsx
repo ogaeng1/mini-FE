@@ -21,6 +21,7 @@ const onClickWriteHandler = () => {
 
 const onLogoutHandler = () => {
     sessionStorage.removeItem('token');
+    sessionStorage.removeItem('name')
     dispatch(logoutState())
     if(window.location.pathname==="/write"){
         alert("새글을 작성하기 위해 로그인 해주세요.")
