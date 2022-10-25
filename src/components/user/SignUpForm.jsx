@@ -11,7 +11,7 @@ const SignUpForm = ({setShowInput}) => {
         passwordConfirm: "",
         name: "",
       };
-      const {validateEmail,validateName} = useSelector(state => state.user)
+      const {validateEmail, validateName} = useSelector(state => state.user)
       const dispatch = useDispatch();
       const [emChk, setEmChk] = useState(false);    
       const [pwChk, setPwChk] = useState(false);
@@ -49,12 +49,16 @@ const SignUpForm = ({setShowInput}) => {
       const onSubmitHandler = () => {        
         if (!pwChk ) {
           alert("비밀번호를 형식에 맞게 입력해주세요.");
+          return
         } else if(!emChk){
           alert("이메일을 형식에 맞게 입력해주세요.");
+          return
         } else if(!pwcfChk){
           alert("비밀번호가 동일 하지 않습니다.")
+          return
         } else if(!nameChk){
           alert("닉네임을 확인해주세요.")
+          return
         }
         dispatch(
             __addUser({
@@ -112,10 +116,13 @@ const SignUpForm = ({setShowInput}) => {
               type="text" required placeholder="이메일 형식" 
               onChange={onChangeHandler} 
               />
-              <StValidBtn
-              type="button" onClick={onValidateEmailHandler}>
-              중복 확인
-              </StValidBtn>
+              {validateEmail? <StValidBtnTrue type="button" onClick={onValidateEmailHandler}>
+                              중복 확인
+                              </StValidBtnTrue>
+                              : <StValidBtnFalse
+                              type="button" onClick={onValidateEmailHandler}>
+                              중복 확인
+                              </StValidBtnFalse>}
             </StInputBox>
             <StWarn>
               { emChk ? 
@@ -158,10 +165,14 @@ const SignUpForm = ({setShowInput}) => {
               required placeholder="3자 이상 16자 이하, 영어 또는 숫자로 구성" 
               onChange={onChangeHandler}
               />
-              <StValidBtn
-              type="button" onClick={onValidateNameHandler}>
-              중복 확인
-              </StValidBtn>
+              {validateName? <StValidBtnTrue type="button" onClick={onValidateNameHandler}>
+                            중복 확인
+                            </StValidBtnTrue>
+                            : <StValidBtnFalse type="button" onClick={onValidateNameHandler}>
+                            중복 확인
+                            </StValidBtnFalse>
+                             }
+
             </StInputBox>
             <StWarn>
             { nameChk ? 
@@ -176,9 +187,9 @@ const SignUpForm = ({setShowInput}) => {
             >
               뒤로 가기
             </StUserBtn>
-            { validateEmail && validateName ? 
+            { validateEmail && validateName && emChk && pwChk && nameChk && pwcfChk ? 
             (<StUserBtn onClick={onSubmitHandler}>회원가입</StUserBtn>) 
-            : (<StGrayBtn onClick={()=>{alert("아이디 중복 검사를 해주세요.")}} type="button">
+            : (<StGrayBtn onClick={()=>{alert("중복 여부과 입력 형식을 확인 해주세요.")}} type="button">
               회원가입
               </StGrayBtn>
               )
@@ -239,7 +250,7 @@ const StWarn = styled.div`
   font-size: 12px;
 `;
 
-const StValidBtn = styled.button`
+const StValidBtnTrue = styled.button`
   min-width: 60px;
   margin-left: 15px;
   margin-bottom: 5px;
@@ -249,6 +260,19 @@ const StValidBtn = styled.button`
   justify-content: center;
   align-items: center;
   background-color: #1363df;
+  color: white;
+  border: none;
+`;
+const StValidBtnFalse = styled.button`
+  min-width: 60px;
+  margin-left: 15px;
+  margin-bottom: 5px;
+  font-size: 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  justify-content: center;
+  align-items: center;
+  background-color: gray;
   color: white;
   border: none;
   &:hover {
