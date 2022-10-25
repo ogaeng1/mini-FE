@@ -75,9 +75,7 @@ export const __getPost = createAsyncThunk(
 const postSlice = createSlice({
     name: "post",
     initialState,
-    reducers: {
-        }
-    },
+    reducers: {},
     extraReducers: {
         //게시글 작성
         [__postFeed.fulfilled]: (state, action) => {
