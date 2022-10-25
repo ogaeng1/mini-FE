@@ -31,7 +31,7 @@ const onChangeHandler = (event) => {
     if(isLogin){
       navigate("/");
       dispatch(loginState());
-    }else{
+    }if(!isLogin){
       navigate("/login");
       dispatch(logoutState());
     };
