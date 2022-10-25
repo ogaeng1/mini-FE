@@ -4,8 +4,8 @@ import styled from "styled-components";
 import Layout from "../components/global/Layout";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { __getPost } from "../redux/modules/postSlice";
-
+import { __getPost, __likePost } from "../redux/modules/postSlice";
+import { FcLike, FcLikePlaceholder } from "react-icons/fc";
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -15,26 +15,31 @@ const Home = () => {
     dispatch(__getPost());
   }, [dispatch]);
 
-  const post = useSelector((state) => state.post.post);
+  const {posts} = useSelector((state) => state.post);
+  
+  const onClickLikeHandler = (Id) =>{
+    dispatch(__likePost(Id))
+  }
 
   return (
     <Layout>
-      {post.map((post) => (
+      {posts.map((post) => (
         <Container
           key={post.postId}
-          onClick={() => {
-            navigate(`/${post.id}`);
-          }}>
+          >
           <Box>
-            <UserName>{`/${post.name}`}</UserName>
+            <UserName>{post.name}</UserName>
             <PhotoBox>
-              <PhotoImg>이미지</PhotoImg>
+              <PhotoImg src={`${post.img}`}></PhotoImg>
             </PhotoBox>
             <LikeBox>
-              <Like>좋아요❤️</Like>
+              {post.likeUsers.findIndex(name => name===sessionStorage.getItem("name")) === -1 ?
+              <FcLikePlaceholder onClick={()=>onClickLikeHandler(post.postId)}/>
+              : <FcLike onClick={()=>onClickLikeHandler(post.postId)}/>}
+              <span>{post.likeUsers.length}</span>
             </LikeBox>
-            <Content>내용</Content>
-            <CommentNum>댓글 갯수</CommentNum>
+            <Content>{post.content}</Content>
+            <CommentNum>{post.commentNum}</CommentNum>
           </Box>
         </Container>
       ))}
@@ -47,7 +52,7 @@ export default Home;
 const Container = styled.div`
   flex-direction: column;
   width: 500px;
-  height: 580px;
+  height: 700px;
   margin: 50px auto;
   border: 3px solid black;
   padding: 10px;
@@ -58,7 +63,7 @@ const UserName = styled.div`
 `;
 
 const Box = styled.div`
-  height: 550px;
+  height: 100%;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -68,12 +73,12 @@ const Box = styled.div`
 
 const PhotoBox = styled.div`
   border: 1px solid black;
-  height: 300px;
+  height: 600px;
   width: 100%;
   overflow: hidden;
 `;
 
-const PhotoImg = styled.div`
+const PhotoImg = styled.img`
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -84,13 +89,6 @@ const LikeBox = styled.div`
   height: 15px;
 
   border: 2px solid white;
-`;
-
-const Like = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 15px;
 `;
 
 const Content = styled.div`

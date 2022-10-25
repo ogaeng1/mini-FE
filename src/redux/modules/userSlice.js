@@ -1,7 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import { setCookie } from "../../components/global/cookie";
-
 
 export const __validateEmail = createAsyncThunk(
     "VALIDATE_EMAIL",
@@ -61,9 +59,13 @@ export const __loginUser = createAsyncThunk(
     "LOGIN_USER",
     async(arg, thunkAPI) => {
         try{
-            await axios.post("http://43.200.182.245:8080/api/login", arg)
-            .then((res)=> setCookie('token', res.data.check.data.accessToken));
-            return thunkAPI.fulfillWithValue(arg);
+           const {data} = await axios.post("http://43.200.182.245:8080/api/login", arg)
+            .then((res)=> {
+                sessionStorage.setItem('token', res.headers.accesstoken);
+                sessionStorage.setItem("name", res.data.check.data.name);
+                return res;
+            });
+            return thunkAPI.fulfillWithValue({arg, data});
         } catch(e){
             return thunkAPI.rejectWithValue(e)
         }
@@ -71,7 +73,7 @@ export const __loginUser = createAsyncThunk(
 )  
 
 const initialState = {
-    result: "",
+    user: {email:"",name:""},
     isLoading: false,
     message: "",
     isLogin: false,
@@ -142,8 +144,15 @@ const userSlice = createSlice({
     },
     [__loginUser.fulfilled]: (state, action) => {
         state.isLoading = false;
-        state.isLogin = true;
-        alert(`${action.payload.email}님 환영합니다.`)
+        state.isLogin = action.payload.data.result;
+        if(state.isLogin){
+            state.user = {email : action.payload.arg.email, name : action.payload.data.check.data.name};
+            alert(`${action.payload.data.check.data.name}님 환영합니다.`);
+        } else{
+            state.isLogin = false;
+            alert("계정정보를 확인해주시거나, 회원가입을 해주세요.")
+        }
+
     },
     [__loginUser.rejected]: (state, action) => {
         state.isLoading = false; 
