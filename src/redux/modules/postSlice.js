@@ -13,7 +13,6 @@ const initialState = {
         commentNum: 0,
         likeUsers:[]
       },],
-    isSuccess: false,
 }
 
 //게시글 작성
@@ -41,7 +40,7 @@ export const __likePost = createAsyncThunk("LIKE_POST", async(payload, thunkAPI)
                 'Authorization': `Bearer ${sessionStorage.getItem('token')}`,
                 'withCredentials': true,
             }
-        }).then((res)=>res)
+        })
         return thunkAPI.fulfillWithValue({data, payload});
     } catch(err) {
         return err;
@@ -65,12 +64,8 @@ export const __getPost = createAsyncThunk(
       try {
         const {data} = await axios.get("http://43.200.182.245:8080/api/post")
         .then(res=>res.data.check);
-        //axios를 통해 db.json에 있는 정보를 불러온 것
-        //console.log("thunk에서 보낸다", result);
         return thunkAPI.fulfillWithValue(data);
-        //성공하면 result.data를 보내고
       } catch (error) {
-        // console.log(error);
         return thunkAPI.rejectWithValue(error);
       }
     }
@@ -81,8 +76,6 @@ const postSlice = createSlice({
     name: "post",
     initialState,
     reducers: {
-        isSuccessFalse:(state)=>{
-            state.isSuccess = false;
         }
     },
     extraReducers: {
@@ -96,23 +89,22 @@ const postSlice = createSlice({
         },
         //게시글 좋아요
         [__likePost.fulfilled]: (state, action) => {
-            const index = state.posts.findIndex(post => post.postId === action.payload.payload)
-            const new_post = {...state.posts[index], likeUsers: action.payload.data.check.data.likeUsers}
-            state.posts.splice(index, 1, new_post)
-            state.isSuccess = action.payload.result;
+            if(action.payload.code === "ERR_BAD_REQUEST"){
+                alert("로그인이 필요합니다. 로그인해주세요.");
+                return;
+            } else{
+                const index = state.posts.findIndex(post => post.postId === action.payload.payload)
+                const new_post = {...state.posts[index], likeUsers: action.payload.data.check.data.likeUsers}
+                state.posts.splice(index, 1, new_post)
+            }
         },
         [__likePost.rejected]: (state, action) => {
-            state.isSuccess = action.payload.result;
         },
         //게시글 조회
-        [__getPost.pending]: (state) => {
-            state.isLoading = true;
-        },
         [__getPost.fulfilled]: (state, action) => {
             state.posts = action.payload;
         },
         [__getPost.rejected]: (state, action) => {
-            state.error = action.payload;
         },
 
     }
