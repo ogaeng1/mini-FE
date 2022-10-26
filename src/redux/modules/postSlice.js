@@ -5,7 +5,6 @@ const initialState = {
     posts: [],
     isLoading:false,
     isSuccess:false,
-    postsNum: 0
 }
 
 //게시글 작성
