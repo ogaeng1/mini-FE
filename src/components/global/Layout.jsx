@@ -8,7 +8,7 @@ const LayoutContainer = styled.div`
   max-height: 100%;
   min-height: 94vh;
   margin: 54px 0 0 0;
-  padding: 0;
+  padding: 10px;
   background-color: #fafafa;
 `;
 
@@ -21,7 +21,6 @@ function Layout({ children }) {
       </LayoutContainer>
     </>
   );
-
-};
+}
 
 export default Layout;
