@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
 import { BsInstagram } from "react-icons/bs";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { loginState, logoutState } from "../../redux/modules/userSlice";
 
@@ -9,6 +9,12 @@ const Header = () => {
 const {isLogin} = useSelector(state => state.user)
 const navigate = useNavigate();
 const dispatch = useDispatch();
+const {pathname}= useLocation()
+
+const onClickLocation = () => {
+    if(pathname === "/")
+    window.location.replace("/")
+}
 
 const onClickWriteHandler = () => {
     if(isLogin){
@@ -22,6 +28,7 @@ const onClickWriteHandler = () => {
 const onLogoutHandler = () => {
     sessionStorage.removeItem('token');
     sessionStorage.removeItem('name')
+    sessionStorage.removeItem('refreshtoken')
     dispatch(logoutState())
     if(window.location.pathname==="/write"){
         alert("새글을 작성하기 위해 로그인 해주세요.")
@@ -41,7 +48,7 @@ useEffect(() => {
 
 return (
     <HeaderContainer>
-        <StLink to="/">
+        <StLink to="/" onClick={()=> onClickLocation()}>
             <BsInstagram style={{margin:'0 20px 0 50px'}}/>
             <h1 style={{margin:'3px 0 0 0'}}>항해그램</h1>
         </StLink>

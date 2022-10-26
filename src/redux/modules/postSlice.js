@@ -2,17 +2,10 @@ import { createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import axios from "axios";
 
 const initialState = {
-    posts: [{
-        postId: 0,
-        title: "",
-        content: "",
-        img: "",
-        name: "",
-        createTime: 0,
-        likeNum: 0,
-        commentNum: 0,
-        likeUsers:[]
-      },],
+    posts: [],
+    isLoading:false,
+    isSuccess:false,
+    postsNum: 0
 }
 
 //게시글 작성
@@ -70,12 +63,31 @@ export const __getPost = createAsyncThunk(
       }
     }
   );
-  
+
+//무한스크롤
+export const __infiniteScroll = createAsyncThunk(
+    "INFINITE_SCROLL",
+    async(page, thunkAPI)=>{
+        try{            
+            const res = await axios.get(`http://43.200.182.245:8080/api/post?page=${page}`);
+            if(res.data.check.data.length===0){
+                throw res
+            }
+            return thunkAPI.fulfillWithValue(res.data.check.data)
+        }catch(e){
+            return thunkAPI.rejectWithValue(e)
+        }
+    }
+)
 
 const postSlice = createSlice({
     name: "post",
     initialState,
-    reducers: {},
+    reducers: {
+        isSuccessFalse:(state)=>{
+            state.isSuccess = false;
+        }
+    },
     extraReducers: {
         //게시글 작성
         [__postFeed.fulfilled]: (state, action) => {
@@ -103,6 +115,16 @@ const postSlice = createSlice({
             state.posts = action.payload;
         },
         [__getPost.rejected]: (state, action) => {
+        },
+        //무한 스크롤
+        [__infiniteScroll.pending]: (state, action) => {
+            state.isLoading = true;
+        },
+        [__infiniteScroll.fulfilled]: (state, action) => {
+            state.posts.push(...action.payload)
+            state.isLoading = false;
+        },
+        [__infiniteScroll.rejected]: (state, action) => {
         },
 
     }

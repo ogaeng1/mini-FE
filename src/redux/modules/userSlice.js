@@ -132,6 +132,7 @@ const userSlice = createSlice({
         state.isLogin = true;
         sessionStorage.setItem('token', action.payload.headers.accesstoken)
         sessionStorage.setItem('refreshtoken', action.payload.headers.refreshtoken)
+        sessionStorage.setItem('name', action.payload.data.check.data.name )
         alert(`${action.payload.data.check.data.name}님 환영합니다.`);
     },
     [__loginUser.rejected]: (state, action) => {

@@ -44,6 +44,7 @@ const AddPost = () => {
         alert("새글 등록에 성공하였습니다.")
         navigate("/")
         dispatch(isSuccessFalse())
+        window.location.replace("/")
       }
     },[onPostingHandler])
 
