@@ -1,8 +1,7 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
 import { BsInstagram } from "react-icons/bs";
-import { getCookie, removeCookie } from "./cookie";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { loginState, logoutState } from "../../redux/modules/userSlice";
 
@@ -10,9 +9,14 @@ const Header = () => {
 const {isLogin} = useSelector(state => state.user)
 const navigate = useNavigate();
 const dispatch = useDispatch();
-console.log(window.location.pathname)
+const {pathname}= useLocation()
 
-const onClick = () => {
+const onClickLocation = () => {
+    if(pathname === "/")
+    window.location.replace("/")
+}
+
+const onClickWriteHandler = () => {
     if(isLogin){
         navigate("/write")
     } else{
@@ -22,7 +26,9 @@ const onClick = () => {
 }
 
 const onLogoutHandler = () => {
-    removeCookie('token');
+    sessionStorage.removeItem('token');
+    sessionStorage.removeItem('name')
+    sessionStorage.removeItem('refreshtoken')
     dispatch(logoutState())
     if(window.location.pathname==="/write"){
         alert("새글을 작성하기 위해 로그인 해주세요.")
@@ -31,7 +37,7 @@ const onLogoutHandler = () => {
 };
 
 useEffect(() => {
-    if(getCookie('token')){
+    if(sessionStorage.getItem('token')){
         dispatch(loginState())
         } else {
         dispatch(logoutState())
@@ -42,7 +48,7 @@ useEffect(() => {
 
 return (
     <HeaderContainer>
-        <StLink to="/">
+        <StLink to="/" onClick={()=> onClickLocation()}>
             <BsInstagram style={{margin:'0 20px 0 50px'}}/>
             <h1 style={{margin:'3px 0 0 0'}}>항해그램</h1>
         </StLink>
@@ -50,7 +56,7 @@ return (
             {isLogin ?
             <UserBtn onClick={()=> onLogoutHandler()}>로그아웃</UserBtn>
             : <UserBtn onClick={() => navigate("/login")} >로그인</UserBtn> }
-            <UserBtn onClick={() => onClick()}>작성하기</UserBtn>
+            <UserBtn onClick={() => onClickWriteHandler()}>작성하기</UserBtn>
         </StBtns>
 
     </HeaderContainer>
@@ -84,7 +90,7 @@ const StBtns = styled.div`
 `
 const UserBtn = styled.button`
     width: 70%;
-    background-color: DBDBDB;
+    background-color: #DBDBDB;
     color: black;
     border: none;
     cursor: pointer;

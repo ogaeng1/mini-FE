@@ -1,7 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import { setCookie } from "../../components/global/cookie";
-
 
 export const __validateEmail = createAsyncThunk(
     "VALIDATE_EMAIL",
@@ -9,16 +7,10 @@ export const __validateEmail = createAsyncThunk(
         try{
             const {result} = await axios.post("http://43.200.182.245:8080/api/id-duplicate", arg)
             .then(res => res.data);
-            if(result){
-                sessionStorage.setItem("EmailValid", true);
-                alert("사용가능한 아이디입니다.");
-            } else{
-                sessionStorage.setItem("EmailValid", false);
-                alert("사용불가능한 아이디입니다.");
-            }
+            if(!result) throw result;
             return thunkAPI.fulfillWithValue(result);
         } catch(e){
-            return thunkAPI.rejectWithValue(e)
+            return thunkAPI.rejectWithValue(e);
         }
     }
 )
@@ -28,17 +20,11 @@ export const __validateName = createAsyncThunk(
     async(arg, thunkAPI) => {
         try{
             const {result} = await axios.post("http://43.200.182.245:8080/api/name-duplicate", arg)
-            .then(res => res.data);;
-            if(result) {
-                sessionStorage.setItem("nameValid", true);
-                alert("사용 가능한 닉네임입니다.");
-            } else {
-                sessionStorage.setItem("nameValid", false);
-                alert("사용 불가능한 닉네임입니다.");
-            }
+            .then(res => res.data);
+            if(!result) throw result;
             return thunkAPI.fulfillWithValue(result);
         } catch(e){
-            return thunkAPI.rejectWithValue(e)
+            return thunkAPI.rejectWithValue(e);
         }
     }
 )
@@ -61,9 +47,9 @@ export const __loginUser = createAsyncThunk(
     "LOGIN_USER",
     async(arg, thunkAPI) => {
         try{
-            await axios.post("http://43.200.182.245:8080/api/login", arg)
-            .then((res)=> setCookie('token', res.data.check.data.accessToken));
-            return thunkAPI.fulfillWithValue(arg);
+           const res = await axios.post("http://43.200.182.245:8080/api/login", arg)
+           if(!res.data.result) throw res 
+           return thunkAPI.fulfillWithValue(res);
         } catch(e){
             return thunkAPI.rejectWithValue(e)
         }
@@ -71,7 +57,7 @@ export const __loginUser = createAsyncThunk(
 )  
 
 const initialState = {
-    result: "",
+    user: {email:"",name:""},
     isLoading: false,
     message: "",
     isLogin: false,
@@ -103,13 +89,13 @@ const userSlice = createSlice({
     },
     [__validateEmail.fulfilled]: (state, action) => {
         state.isLoading = false;
-        if(action.payload){state.validateEmail = true}
-        else {state.validateEmail = false}
-        
+        state.validateEmail = true
+        alert("사용 가능한 이메일입니다.")
     },
     [__validateEmail.rejected]: (state, action) => {
         state.isLoading = false; 
-        state.message = "데이터를 불러오지 못했습니다.";
+        state.validateEmail = false
+        alert("사용 불가능한 이메일입니다.")
     },
 
     [__validateName.pending]: (state, action) => {
@@ -117,12 +103,13 @@ const userSlice = createSlice({
     },
     [__validateName.fulfilled]: (state, action) => {
         state.isLoading = false;
-        if(action.payload){state.validateName = true;}
-        else {state.validateName = false;}
+        state.validateName = true
+        alert("사용 가능한 닉네임입니다.")
     },
     [__validateName.rejected]: (state, action) => {
         state.isLoading = false; 
-        state.message = "데이터를 불러오지 못했습니다.";
+        state.validateName = false
+        alert("사용 불가능한 닉네임입니다.")
     },
 
     [__addUser.pending]: (state, action) => {
@@ -143,13 +130,15 @@ const userSlice = createSlice({
     [__loginUser.fulfilled]: (state, action) => {
         state.isLoading = false;
         state.isLogin = true;
-        alert(`${action.payload.email}님 환영합니다.`)
+        sessionStorage.setItem('token', action.payload.headers.accesstoken)
+        sessionStorage.setItem('refreshtoken', action.payload.headers.refreshtoken)
+        sessionStorage.setItem('name', action.payload.data.check.data.name )
+        alert(`${action.payload.data.check.data.name}님 환영합니다.`);
     },
     [__loginUser.rejected]: (state, action) => {
         state.isLoading = false; 
         state.isLogin = false;
         alert("아이디와 비밀번호를 확인해주세요.")
-        
     },
   }
 });

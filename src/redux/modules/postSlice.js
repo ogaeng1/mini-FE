@@ -1,24 +1,11 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import axios from "axios";
-import { getCookie } from "../../components/global/cookie";
 
 const initialState = {
     posts: [],
-    post: [
-        {
-          postId: "",
-          title: "",
-          content: "",
-          img: "",
-          name: "",
-          createTime: 0,
-          likeNum: 0,
-          commentNum: 0,
-        },
-      ],
-    
+    isLoading:false,
+    isSuccess:false,
 }
-
 
 //게시글 작성
 export const __postFeed = createAsyncThunk("CREATE_POST", async(payload, thunkAPI) => {
@@ -26,11 +13,27 @@ export const __postFeed = createAsyncThunk("CREATE_POST", async(payload, thunkAP
         const {data} = await axios.post("http://43.200.182.245:8080/api/post", payload, {
             headers: {
                 'Content-Type': 'multipart/form-data',
-                'Authorization': `Bearer ${getCookie('token')}`,
+                'Authorization': `Bearer ${sessionStorage.getItem('token')}`,
                 'withCredentials': true,
             }
-        }).then((res)=>res.data.check)
+        })
         return thunkAPI.fulfillWithValue(data);
+    } catch(err) {
+        return err;
+    }
+});
+
+//좋아요
+export const __likePost = createAsyncThunk("LIKE_POST", async(payload, thunkAPI) => {
+    try {
+        const {data} = await axios.post(`http://43.200.182.245:8080/api/post/${payload}/like`,"",{
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${sessionStorage.getItem('token')}`,
+                'withCredentials': true,
+            }
+        })
+        return thunkAPI.fulfillWithValue({data, payload});
     } catch(err) {
         return err;
     }
@@ -46,62 +49,84 @@ export const __getDetailPost = createAsyncThunk("GET_DETAIL_POST", async(postId,
     }
 });
 
-//혜민님 부분
+//게시글 조회
 export const __getPost = createAsyncThunk(
     "post/getPost",
     async (_, thunkAPI) => {
       try {
-        const result = await axios.get("http://localhost:3003/post");
-        //axios를 통해 db.json에 있는 정보를 불러온 것
-        //console.log("thunk에서 보낸다", result);
-        return thunkAPI.fulfillWithValue(result.data);
-        //성공하면 result.data를 보내고
+        const {data} = await axios.get("http://43.200.182.245:8080/api/post")
+        .then(res=>res.data.check);
+        return thunkAPI.fulfillWithValue(data);
       } catch (error) {
-        // console.log(error);
         return thunkAPI.rejectWithValue(error);
       }
     }
   );
-  
+
+//무한스크롤
+export const __infiniteScroll = createAsyncThunk(
+    "INFINITE_SCROLL",
+    async(page, thunkAPI)=>{
+        try{            
+            const res = await axios.get(`http://43.200.182.245:8080/api/post?page=${page}`);
+            if(res.data.check.data.length===0){
+                throw res
+            }
+            return thunkAPI.fulfillWithValue(res.data.check.data)
+        }catch(e){
+            return thunkAPI.rejectWithValue(e)
+        }
+    }
+)
 
 const postSlice = createSlice({
     name: "post",
     initialState,
-    reducers: {},
+    reducers: {
+        isSuccessFalse:(state)=>{
+            state.isSuccess = false;
+        }
+    },
     extraReducers: {
+        //게시글 작성
         [__postFeed.fulfilled]: (state, action) => {
-            state.posts = [...state.posts, action.payload];
+            state.posts = [...state.posts, action.payload.check.data];
+            state.isSuccess = action.payload.result;
         },
         [__postFeed.rejected]: (state, action) => {
-            state.err = action.payload;
+            state.isSuccess = action.payload.result;
         },
-        [__postFeed.pending]: (state, action) => {
-
+        //게시글 좋아요
+        [__likePost.fulfilled]: (state, action) => {
+            if(action.payload.code === "ERR_BAD_REQUEST"){
+                alert("로그인이 필요합니다. 로그인해주세요.");
+                return;
+            } else{
+                const index = state.posts.findIndex(post => post.postId === action.payload.payload)
+                const new_post = {...state.posts[index], likeUsers: action.payload.data.check.data.likeUsers}
+                state.posts.splice(index, 1, new_post)
+            }
         },
+        [__likePost.rejected]: (state, action) => {
+        },
+        //게시글 조회
         [__getPost.fulfilled]: (state, action) => {
-            state.isLoading = false;
-             state.posts.push(...action.payload.content);
+            state.posts = action.payload;
         },
         [__getPost.rejected]: (state, action) => {
-            state.isLoading = false;
-            state.error = action.payload;
         },
-
-        [__getPost.pending]: (state) => {
+        //무한 스크롤
+        [__infiniteScroll.pending]: (state, action) => {
             state.isLoading = true;
         },
-        [__getPost.fulfilled]: (state, action) => {
-        state.post = action.payload;
+        [__infiniteScroll.fulfilled]: (state, action) => {
+            state.posts.push(...action.payload)
+            state.isLoading = false;
         },
-        [__getPost.rejected]: (state, action) => {
-        state.error = action.payload;
+        [__infiniteScroll.rejected]: (state, action) => {
         },
-      
-        
-        // [__getPost.pending]: (state, action) => {
-        //     state.isLoading = true;
-        // }
+
     }
 })
-
+export const { isSuccessFalse } = postSlice.actions
 export default postSlice.reducer;
