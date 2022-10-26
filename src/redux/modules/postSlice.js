@@ -3,6 +3,7 @@ import axios from "axios";
 
 const initialState = {
     posts: [],
+    post:{},
     isLoading:false,
     isSuccess:false,
 }
@@ -42,8 +43,13 @@ export const __likePost = createAsyncThunk("LIKE_POST", async(payload, thunkAPI)
 //게시글 상세 페이지 이동
 export const __getDetailPost = createAsyncThunk("GET_DETAIL_POST", async(postId, thunkAPI) => {
     try {
-        const getDetailPostResponse = await axios.get(`http://43.200.182.245:8080/api/post/${postId}`);
-        return thunkAPI.fulfillWithValue(getDetailPostResponse.data);
+        const res = await axios.get(`http://43.200.182.245:8080/api/post/${postId}`,{
+            headers: {
+                'Authorization': `Bearer ${sessionStorage.getItem('token')}`,
+                'withCredentials': true,
+            }
+        });
+        return thunkAPI.fulfillWithValue(res.data);
     } catch(err) {
         return thunkAPI.rejectWithValue(err);
     }
@@ -78,6 +84,22 @@ export const __infiniteScroll = createAsyncThunk(
         }
     }
 )
+
+//댓글 등록
+export const __postComment = createAsyncThunk("POST_COMMENT", async(payload, thunkAPI) => {
+    try {
+        const res = await axios.post(`http://43.200.182.245:8080/api/post/${payload.id}/comment`, payload.content, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${sessionStorage.getItem('token')}`,
+                'withCredentials': true,
+            }
+        })
+        return thunkAPI.fulfillWithValue(res);
+    } catch(err) {
+        return err;
+    }
+});
 
 const postSlice = createSlice({
     name: "post",
@@ -124,6 +146,26 @@ const postSlice = createSlice({
             state.isLoading = false;
         },
         [__infiniteScroll.rejected]: (state, action) => {
+        },
+        //상세페이지 조회
+        [__getDetailPost.pending]: (state, action) => {
+            state.isLoading = true;
+        },
+        [__getDetailPost.fulfilled]: (state, action) => {
+            state.post = action.payload.check.data
+            state.isLoading = false;
+        },
+        [__getDetailPost.rejected]: (state, action) => {
+        },
+        //댓글 작성
+        [__postComment.pending]: (state, action) => {
+            state.isLoading = true;
+        },
+        [__postComment.fulfilled]: (state, action) => {
+            state.post = action.payload.check.data
+            state.isLoading = false;
+        },
+        [__postComment.rejected]: (state, action) => {
         },
 
     }

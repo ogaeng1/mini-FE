@@ -12,8 +12,9 @@ const dispatch = useDispatch();
 const {pathname}= useLocation()
 
 const onClickLocation = () => {
-    if(pathname === "/")
-    window.location.replace("/")
+    if(pathname === "/"){
+        window.location.replace("/")
+    }
 }
 
 const onClickWriteHandler = () => {
