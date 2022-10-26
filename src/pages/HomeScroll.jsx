@@ -3,7 +3,7 @@ import styled from "styled-components";
 import Layout from "../components/global/Layout";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { __infiniteScroll, __likePost } from "../redux/modules/postSlice";
+import { __getDetailPost, __infiniteScroll, __likePost } from "../redux/modules/postSlice";
 import { FcLike, FcLikePlaceholder } from "react-icons/fc";
 import { useInView } from "react-intersection-observer"
 
@@ -29,8 +29,12 @@ const HomeScroll = () => {
     }
   }, [inView, isLoading])
   
-  const onClickLikeHandler = (Id) =>{
-    dispatch(__likePost(Id))
+  const onClickLikeHandler = (id) =>{
+    dispatch(__likePost(id))
+  }
+  const onClickDetailHandler = (id) =>{
+    dispatch(__getDetailPost(id));
+    navigate(`/detail/${id}`);
   }
 
   return (
@@ -38,13 +42,13 @@ const HomeScroll = () => {
       {posts.map((post, idx) => (
         <Container key={post.postId}>
             {posts.length -1 === idx ?
-            <Box ref={ref}>
+            <Box ref={ref} >
             <StBox>
               <UserName>{post.name}</UserName>
               <Title>{post.title}</Title>
             </StBox>
-            <PhotoBox>
-              <PhotoImg src={`${post.img}`}></PhotoImg>
+            <PhotoBox onClick={()=> onClickDetailHandler(post.postId)}>
+              <PhotoImg src={`${post.img}`} ></PhotoImg>
             </PhotoBox>
             <LikeBox>
               {post.likeUsers.findIndex(name => name===sessionStorage.getItem("name")) === -1 ?
@@ -53,7 +57,7 @@ const HomeScroll = () => {
               <span>{post.likeUsers.length}</span>
             </LikeBox>
             <Content>{post.content}</Content>
-            <CommentNum>댓글{post.commentNum}개</CommentNum>
+            <CommentNum>댓글${post.commentNum}개</CommentNum>
           </Box>
           :
           <Box>
@@ -61,12 +65,12 @@ const HomeScroll = () => {
               <UserName>{post.name}</UserName>
               <Title>{post.title}</Title>
             </StBox>
-            <PhotoBox>
+            <PhotoBox onClick={()=> onClickDetailHandler(post.postId)}>
               <PhotoImg src={`${post.img}`}></PhotoImg>
             </PhotoBox>
             <LikeBox>
               {post.likeUsers.findIndex(name => name===sessionStorage.getItem("name")) === -1 ?
-              <FcLikePlaceholder onClick={()=>onClickLikeHandler(post.postId)}/>
+              <FcLikePlaceholder  onClick={()=>onClickLikeHandler(post.postId)}/>
               : <FcLike onClick={()=>onClickLikeHandler(post.postId)}/>}
               <span>{post.likeUsers.length}</span>
             </LikeBox>
@@ -92,7 +96,6 @@ const Container = styled.div`
   border-radius: 10px;
   box-shadow: 0 0 10px grey;
   box-sizing: border-box;
-  cursor: pointer;
   background-color: white;
   align-items: center;
 `;
@@ -122,6 +125,7 @@ const Box = styled.div`
 `;
 
 const PhotoBox = styled.div`
+cursor: pointer;
   box-shadow: 0px 0px 5px grey;
   height: 100%;
   width: 100%;
@@ -138,6 +142,7 @@ const PhotoImg = styled.img`
 const LikeBox = styled.div`
   width: 20%;
   height: 10px;
+  cursor: pointer
 `;
 
 const Content = styled.div`
