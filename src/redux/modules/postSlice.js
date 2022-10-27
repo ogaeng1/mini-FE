@@ -221,7 +221,7 @@ const postSlice = createSlice({
           },
           [__deletePost.fulfilled]: (state, action) => {
             state.isLoading = false;
-            state.success = action.payload;
+            state.post = state.post.filter((post) => post.postId !== action.payload);
           },
           [__deletePost.rejected]: (state, action) => {
             state.isLoading = false;

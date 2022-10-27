@@ -8,8 +8,11 @@ const LayoutContainer = styled.div`
   max-height: 100%;
   min-height: 94vh;
   margin: 54px 0 0 0;
-  padding: 10px;
   background-color: #fafafa;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 `;
 
 function Layout({ children }) {

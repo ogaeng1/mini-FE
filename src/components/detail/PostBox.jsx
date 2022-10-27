@@ -67,12 +67,13 @@ const onClickLikeHandler = (postId) =>{
               <PostHeaderButtons>
                   <BackButton onClick={() => navigate("/")}>🔙</BackButton>
                   <ModifyButton onClick={() => setModalOn(true)}>🔧</ModifyButton>
-                  <DeleteButton onClick={onDeletePost}>💣</DeleteButton>
+                  <DeleteButton onClick={onDeletePost}>❌</DeleteButton>
               </PostHeaderButtons>
               : <BackButton onClick={() => navigate("/")}>🔙</BackButton>}
             </PostHeaderBar>
             <>
-              <p>{post.title}</p>
+              <hr></hr>
+              <PostTitle>{post.title}</PostTitle>
               <ImageContainer src={`${post.img}`}/>
                 <PostContentWrap>
                 {post?.likeUsers?.findIndex(name => name===sessionStorage.getItem("name")) === -1 ?
@@ -83,6 +84,7 @@ const onClickLikeHandler = (postId) =>{
                   <p>{post?.content}</p>
                 </PostContent>
                 </PostContentWrap>
+                <hr></hr>
             </>
             <>
               <PostCommentWrap>
@@ -113,19 +115,24 @@ export default PostBox;
 
 const PostContainer = styled.div`
   width: 100%;
-  height: 75vh;
-  margin-top: 20px;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
+  margin:0 auto;
 `;
 const PostCard = styled.div`
-  width: 50%;
+  width: 23%;
   height: 70%;
   border: 4px solid black;
+  border-radius: 10px;
   display: block;
   justify-content: center;
   padding: 10px;
+`;
+
+const PostTitle = styled.span`
+  font-size: 20px;
 `;
 const PostHeaderBar = styled.div`
   display: flex;
@@ -133,7 +140,6 @@ const PostHeaderBar = styled.div`
   align-items: center;
   width: 100%;
   height: 50px;
-  background-color: gray
 `;
 const PostWriter = styled.div`
   font-size: 20px;
@@ -143,7 +149,7 @@ const PostHeaderButtons = styled.div`
   display: flex;
   justify-content: space-around;
   align-items: center;
-  width: 150px;
+  width: 40%;
   height: 50px;
 `;
 
@@ -151,8 +157,8 @@ const BackButton = styled.button`
   font-size: 20px;
   width: 60px;
   height: 40px;
-  background-color: skyblue;
   border: none;
+  margin: 0px 3px;
   border-radius: 15px;
   &:hover {
     filter: drop-shadow(5px 5px 5px #000);
@@ -163,8 +169,8 @@ const ModifyButton = styled.button`
   font-size: 20px;
   width: 60px;
   height: 40px;
-  background-color: green;
   border: none;
+  margin: 0px 3px;
   border-radius: 15px;
   &:hover {
     filter: drop-shadow(5px 5px 5px #000);
@@ -172,10 +178,10 @@ const ModifyButton = styled.button`
   cursor: pointer;
 `;
 const DeleteButton = styled.button`
-  font-size: 20px;
+  font-size: 25px;
   width: 60px;
   height: 40px;
-  background-color: yellow;
+  margin: 0px 3px;
   border: none;
   border-radius: 15px;
   &:hover {
@@ -192,8 +198,7 @@ const ImageContainer = styled.img`
 const PostContentWrap = styled.div`
     margin-top: 10px;
     width: 100% ;
-    height: 50px;
-    border: 1px solid black;
+    height: 30px;
     display: flex;
     align-items: center;    
 `;
@@ -209,7 +214,6 @@ const PostCommentWrap = styled.div`
 const CommentListWrap = styled.div`
     width: 100%;
     height: 80%;
-    overflow: scroll;
     display: flex;
     flex-direction: column;
     justify-content: left;
@@ -234,6 +238,9 @@ const CommentInputForm = styled.form`
         height: 35px;
         border: none;
         border-radius: 10px;
-
+        &:hover {
+          filter: drop-shadow(5px 5px 5px #000);
+        }
+        cursor: pointer;
     }
 `;

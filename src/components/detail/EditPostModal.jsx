@@ -90,12 +90,12 @@ const ModalBox = styled.form`
   display: flex;
   flex-direction: column;
   margin:auto;
-  width: 600px;
-  height: 550px;
+  width: 20%;
+  height: 500px;
   border: 2px #000 solid;
   border-radius: 5px;
   background: white;
-  padding: 20px;
+  padding: 10px;
   
   input[type="text"] {
     box-sizing:border-box;
@@ -144,15 +144,15 @@ const FooterButtonWrap = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-direction: column;
     width: 100%;
 `;
 
 const ModifyDone = styled.button`
-  margin: 10px 0px;
+  margin-top: 10px;
   height: 30px;
   width: 80px;
-  background-color: #ff5f2e;
+  background-color: #C65FF9;
   cursor: pointer;
-  align-items: center;
   border-radius: 10px;
 `;

@@ -90,7 +90,7 @@ const Container = styled.div`
   flex-direction: column;
   width: 450px;
   height: 600px;
-  margin: 50px auto;
+  margin: 20px auto;
   border: 2px  solid black;
   padding: 10px;
   border-radius: 10px;
