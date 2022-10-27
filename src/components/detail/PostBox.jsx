@@ -1,23 +1,33 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
-import { __getDetailPost, __likePost, __postComment } from "../../redux/modules/postSlice";
+import { __getDetailPost, __likePost, __postComment, __deletePost } from "../../redux/modules/postSlice";
 import { FcLike, FcLikePlaceholder } from "react-icons/fc";
 import Comment from "./Comment";
+import EditPostModal from "./EditPostModal";
 
 const PostBox = () => {
-  const postId = useParams()
-  const id = Number(postId.id)
+  const navigate = useNavigate();
+  const {id} = useParams()
+  const postId = Number(id)
+  const [modalOn, setModalOn] = useState(false);
   const {post} = useSelector(res=> res.post)
   const dispatch = useDispatch()
   const [content, setContent] = useState({
       content:""
 });
 
-useEffect(() => {
-  dispatch(__getDetailPost(id));
-}, [dispatch]);
+//게시글 삭제
+  const onDeletePost = () => {
+    if (sessionStorage.getItem("name") === post.name) {
+      dispatch(__deletePost(postId))
+      alert("게시글이 삭제되었습니다.")
+      navigate("/")
+    } else {
+      return alert("ERROR !");
+    }
+  }
 
 const onChangeHandler = (e) => {
     const {name, value} = e.target;
@@ -38,29 +48,31 @@ const onAddCommentHandler = (e) => {
   if(content.content.trim()==="" ){
       return alert("댓글을 모두 입력해주세요.");
   }        
-  dispatch(__postComment({content, id}))
+  dispatch(__postComment({content, postId}))
   setContent({
       content:""
   });
 };
 
-const onClickLikeHandler = (id) =>{
-  dispatch(__likePost(id))
+const onClickLikeHandler = (postId) =>{
+  dispatch(__likePost(postId))
 }
 
     return (
         <PostContainer>
-          <PostCard>
+          <PostCard key={postId}>
             <PostHeaderBar>
               <PostWriter>{post.name}</PostWriter>
               {post.correct ?
               <PostHeaderButtons>
-                  <ModifyButton>수정</ModifyButton>
-                  <DeleteButton>💣</DeleteButton>
+                  <BackButton onClick={() => navigate("/")}>🔙</BackButton>
+                  <ModifyButton onClick={() => setModalOn(true)}>🔧</ModifyButton>
+                  <DeleteButton onClick={onDeletePost}>💣</DeleteButton>
               </PostHeaderButtons>
-              : null}
+              : <BackButton onClick={() => navigate("/")}>🔙</BackButton>}
             </PostHeaderBar>
             <>
+              <p>{post.title}</p>
               <ImageContainer src={`${post.img}`}/>
                 <PostContentWrap>
                 {post?.likeUsers?.findIndex(name => name===sessionStorage.getItem("name")) === -1 ?
@@ -86,7 +98,12 @@ const onClickLikeHandler = (id) =>{
                   </CommentInputForm>
               </PostCommentWrap>
             </>
-          </PostCard>          
+
+          </PostCard>
+          <EditPostModal show={modalOn} id={postId} setShow={setModalOn} onHide={() => setModalOn(false)}>
+            {" "}
+          </EditPostModal>
+
         </PostContainer>
     );
 };
@@ -101,11 +118,10 @@ const PostContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-
 `;
 const PostCard = styled.div`
   width: 50%;
-  height: 100%;
+  height: 70%;
   border: 4px solid black;
   display: block;
   justify-content: center;
@@ -129,6 +145,19 @@ const PostHeaderButtons = styled.div`
   align-items: center;
   width: 150px;
   height: 50px;
+`;
+
+const BackButton = styled.button`
+  font-size: 20px;
+  width: 60px;
+  height: 40px;
+  background-color: skyblue;
+  border: none;
+  border-radius: 15px;
+  &:hover {
+    filter: drop-shadow(5px 5px 5px #000);
+  }
+  cursor: pointer;
 `;
 const ModifyButton = styled.button`
   font-size: 20px;
