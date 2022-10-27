@@ -9,8 +9,8 @@ import EditPostModal from "./EditPostModal";
 
 const PostBox = () => {
   const navigate = useNavigate();
-  const {id} = useParams()
-  const postId = Number(id)
+  const postId = useParams()
+  const id = Number(postId.id)
   const [modalOn, setModalOn] = useState(false);
   const {post} = useSelector(res=> res.post)
   const dispatch = useDispatch()
@@ -18,10 +18,14 @@ const PostBox = () => {
       content:""
 });
 
+useEffect(() => {
+  dispatch(__getDetailPost(id));
+}, [dispatch]);
+
 //게시글 삭제
   const onDeletePost = () => {
     if (sessionStorage.getItem("name") === post.name) {
-      dispatch(__deletePost(postId))
+      dispatch(__deletePost(id))
       alert("게시글이 삭제되었습니다.")
       navigate("/")
     } else {
@@ -48,19 +52,19 @@ const onAddCommentHandler = (e) => {
   if(content.content.trim()==="" ){
       return alert("댓글을 모두 입력해주세요.");
   }        
-  dispatch(__postComment({content, postId}))
+  dispatch(__postComment({content, id}))
   setContent({
       content:""
   });
 };
 
-const onClickLikeHandler = (postId) =>{
-  dispatch(__likePost(postId))
+const onClickLikeHandler = (id) =>{
+  dispatch(__likePost(id))
 }
 
     return (
         <PostContainer>
-          <PostCard key={postId}>
+          <PostCard>
             <PostHeaderBar>
               <PostWriter>{post.name}</PostWriter>
               {post.correct ?
