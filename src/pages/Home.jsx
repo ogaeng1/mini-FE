@@ -1,15 +1,13 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
 import Layout from "../components/global/Layout";
-import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { __getPost, __likePost } from "../redux/modules/postSlice";
 import { FcLike, FcLikePlaceholder } from "react-icons/fc";
 
 const Home = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-
+ 
   useEffect(() => {
     dispatch(__getPost());
     console.log(posts)

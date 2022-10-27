@@ -131,11 +131,41 @@ export const __postComment = createAsyncThunk("POST_COMMENT", async(payload, thu
                 'withCredentials': true,
             }
         })
-        return thunkAPI.fulfillWithValue(res);
+        return thunkAPI.fulfillWithValue(res.data.check.data);
     } catch(err) {
         return err;
     }
 });
+
+//댓글 삭제
+export const __deleteComment = createAsyncThunk("DELETE_COMMENT", async(payload, thunkAPI) => {
+    try {
+        await axios.delete(`http://43.200.182.245:8080/api/post/${payload.postId}/comment/${payload.id}`,{
+            headers: {
+                'Authorization': `Bearer ${sessionStorage.getItem('token')}`,
+                'withCredentials': true,
+            }
+        })
+        return thunkAPI.fulfillWithValue(payload);
+    } catch(err) {
+        return err;
+    }
+});
+//댓글 수정
+export const __updateComment = createAsyncThunk("UPDATE_COMMENT", async(payload, thunkAPI) => {
+    try {
+        const res = await axios.put(`http://43.200.182.245:8080/api/post/${payload.postId}/comment/${payload.commentId}`, {content:payload.newComment.content} ,{
+            headers: {
+                'Authorization': `Bearer ${sessionStorage.getItem('token')}`,
+                'withCredentials': true,
+            }
+        }); 
+        return thunkAPI.fulfillWithValue(res.data.check.data);
+    } catch(err) {
+        return err;
+    }
+});
+
 
 const postSlice = createSlice({
     name: "post",
@@ -162,7 +192,8 @@ const postSlice = createSlice({
             } else{
                 const index = state.posts.findIndex(post => post.postId === action.payload.payload)
                 const new_post = {...state.posts[index], likeUsers: action.payload.data.check.data.likeUsers}
-                state.posts.splice(index, 1, new_post)
+                state.post.likeUsers=action.payload.data.check.data.likeUsers;
+                state.posts.splice(index, 1, new_post);
             }
             console.log(action.payload)
         },
@@ -219,12 +250,43 @@ const postSlice = createSlice({
             state.isLoading = true;
         },
         [__postComment.fulfilled]: (state, action) => {
-            state.post = action.payload.check.data
+            const content = {
+                commentId:action.payload.id,
+                content:action.payload.content,
+                writer:action.payload.writer,
+                correct:"correct"
+            }
+            state.post.comments.push(content)
             state.isLoading = false;
+            alert("댓글등록이 완료되었습니다.")
         },
         [__postComment.rejected]: (state, action) => {
         },
-
+        //댓글 삭제
+        [__deleteComment.pending]: (state, action) => {
+            state.isLoading = true;
+        },
+        [__deleteComment.fulfilled]: (state, action) => {
+            const idx = state.post.comments.findIndex(comment=> comment.commentId === action.payload.id)
+            state.post.comments.splice(idx, 1)
+            state.isLoading = false;
+            alert("댓글삭제가 완료되었습니다.")
+        },
+        [__deleteComment.rejected]: (state, action) => {
+        },
+        //댓글 수정
+        [__updateComment.pending]: (state, action) => {
+            state.isLoading = true;
+        },
+        [__updateComment.fulfilled]: (state, action) => {
+            const idx = state.post.comments.findIndex(comment=> comment.commentId === action.payload.id)
+            const new_content = {...action.payload, correct : true}
+            state.post.comments.splice(idx, 1, new_content )
+            state.isLoading = false;
+            alert("댓글수정이 완료되었습니다.")
+        },
+        [__updateComment.rejected]: (state, action) => {
+        },
     }
 })
 export const { isSuccessFalse } = postSlice.actions
