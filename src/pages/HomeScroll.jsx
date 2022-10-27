@@ -42,7 +42,7 @@ const HomeScroll = () => {
       {posts.map((post, idx) => (
         <Container key={post.postId}>
             {posts.length -1 === idx ?
-            <Box ref={ref} >
+            <Box ref={ref}>
             <StBox>
               <UserName>{post.name}</UserName>
               <Title>{post.title}</Title>
@@ -99,6 +99,11 @@ const Container = styled.div`
   box-sizing: border-box;
   background-color: white;
   align-items: center;
+  transition: all 0.2s linear;
+  &:hover {
+    transform: translate(0, -5px);
+  }
+
 `;
 const StBox = styled.div`
   height: 120px;
@@ -126,7 +131,7 @@ const Box = styled.div`
 `;
 
 const PhotoBox = styled.div`
-cursor: pointer;
+  cursor: pointer;
   box-shadow: 0px 0px 5px grey;
   height: 100%;
   width: 100%;

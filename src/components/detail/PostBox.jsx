@@ -28,6 +28,7 @@ useEffect(() => {
       dispatch(__deletePost(id))
       alert("게시글이 삭제되었습니다.")
       navigate("/")
+      window.location.replace("/")
     } else {
       return alert("ERROR !");
     }
@@ -128,6 +129,16 @@ const PostContainer = styled.div`
   justify-content: center;
   align-items: center;
   margin:0 auto;
+  animation: fadein 3s;
+  -webkit-animation: fadein 3s;
+  @keyframes fadein {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
 `;
 const PostCard = styled.div`
   width: 23%;

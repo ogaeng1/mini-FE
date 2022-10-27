@@ -42,6 +42,7 @@ const EditPostModal = ({ show, onHide, setShow }) => {
       alert("수정 완료 !");
       setShow(false);
       navigate(`/`)
+      window.location.replace("/")
     } 
   };
 
