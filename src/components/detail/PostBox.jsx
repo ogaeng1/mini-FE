@@ -61,6 +61,10 @@ const onAddCommentHandler = (e) => {
 const onClickLikeHandler = (id) =>{
   dispatch(__likePost(id))
 }
+const onClickBack = () => {
+  navigate("/")
+  window.location.replace("/")
+}
 
     return (
         <PostContainer>
@@ -69,7 +73,7 @@ const onClickLikeHandler = (id) =>{
               <PostWriter>{post.name}</PostWriter>
               {post.correct ?
               <PostHeaderButtons>
-                  <BackButton onClick={() => navigate("/")}>🔙</BackButton>
+                  <BackButton onClick={() => onClickBack()}>🔙</BackButton>
                   <ModifyButton onClick={() => setModalOn(true)}>🔧</ModifyButton>
                   <DeleteButton onClick={onDeletePost}>❌</DeleteButton>
               </PostHeaderButtons>

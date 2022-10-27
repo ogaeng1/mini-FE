@@ -9,12 +9,9 @@ const Header = () => {
 const {isLogin} = useSelector(state => state.user)
 const navigate = useNavigate();
 const dispatch = useDispatch();
-const {pathname}= useLocation()
 
 const onClickLocation = () => {
-    if(pathname === "/"){
         window.location.replace("/")
-    }
 }
 
 const onClickWriteHandler = () => {

@@ -57,7 +57,7 @@ const HomeScroll = () => {
               <span>{post.likeUsers.length}</span>
             </LikeBox>
             <Content>{post.content}</Content>
-            <CommentNum>댓글${post.commentNum}개</CommentNum>
+            <CommentNum>{post.commentNum}</CommentNum>
           </Box>
           :
           <Box>
@@ -69,13 +69,14 @@ const HomeScroll = () => {
               <PhotoImg src={`${post.img}`}></PhotoImg>
             </PhotoBox>
             <LikeBox>
+              좋아요
               {post.likeUsers.findIndex(name => name===sessionStorage.getItem("name")) === -1 ?
               <FcLikePlaceholder  onClick={()=>onClickLikeHandler(post.postId)}/>
               : <FcLike onClick={()=>onClickLikeHandler(post.postId)}/>}
-              <span>{post.likeUsers.length}</span>
+              <span> {post.likeUsers.length}</span>
             </LikeBox>
             <Content>{post.content}</Content>
-            <CommentNum>{post.commentNum}</CommentNum>
+            <CommentNum>댓글 {post.commentNum}개</CommentNum>
           </Box>
           }
         </Container>
