@@ -94,7 +94,7 @@ const Container = styled.div`
   border: 2px  solid black;
   padding: 10px;
   border-radius: 10px;
-  box-shadow: 0 0 10px grey;
+  box-shadow: 0 0 15px darkolivegreen;
   box-sizing: border-box;
   background-color: white;
   align-items: center;

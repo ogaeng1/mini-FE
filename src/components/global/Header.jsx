@@ -79,6 +79,7 @@ const HeaderContainer = styled.div`
     display: flex;
     background-color: white;
     border-bottom: 1px solid #DBDBDB;
+    box-shadow: 0 0 7px grey;
 `;
 const StBtns = styled.div`
     display: flex;
@@ -88,6 +89,7 @@ const StBtns = styled.div`
     align-items: center;
     gap: 40px;
     margin : 0 50px 0 0 ;
+    transition: all 0.2s ease;
 `
 const UserBtn = styled.button`
     width: 70%;
