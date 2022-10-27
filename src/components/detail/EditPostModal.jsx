@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import { Modal } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { __editPost, __getPost } from "../../redux/modules/postSlice";
+import { __editPost } from "../../redux/modules/postSlice";
 import styled from "styled-components";
 import { useNavigate, useParams } from "react-router-dom";
-import { useEffect } from "react";
 
 new Blob([JSON.stringify()], { type: "application/json" });
 
