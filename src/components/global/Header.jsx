@@ -77,6 +77,7 @@ const HeaderContainer = styled.div`
     background-color: white;
     border-bottom: 1px solid #DBDBDB;
     box-shadow: 0 0 7px grey;
+    z-index: 1;
 `;
 const StBtns = styled.div`
     display: flex;

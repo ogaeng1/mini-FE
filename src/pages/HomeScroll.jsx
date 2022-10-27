@@ -103,6 +103,7 @@ const Container = styled.div`
   &:hover {
     transform: translate(0, -5px);
   }
+  z-index: 0;
 
 `;
 const StBox = styled.div`
