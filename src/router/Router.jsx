@@ -1,6 +1,5 @@
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Home from "../pages/Home";
 import LoginPage from "../pages/LoginPage";
 import PostDetail from "../pages/PostDetail";
 import WritePost from "../pages/WritePost";
