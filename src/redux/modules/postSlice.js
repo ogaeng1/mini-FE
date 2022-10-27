@@ -8,6 +8,21 @@ const initialState = {
     isSuccess:false,
 }
 
+
+//게시글 조회
+export const __getPost = createAsyncThunk(
+    "post/getPost",
+    async (_, thunkAPI) => {
+      try {
+        const {data} = await axios.get("http://43.200.182.245:8080/api/post")
+        .then(res=>res.data.check);
+        return thunkAPI.fulfillWithValue(data);
+      } catch (error) {
+        return thunkAPI.rejectWithValue(error);
+      }
+    }
+  );
+
 //게시글 작성
 export const __postFeed = createAsyncThunk("CREATE_POST", async(payload, thunkAPI) => {
     try {
@@ -21,6 +36,21 @@ export const __postFeed = createAsyncThunk("CREATE_POST", async(payload, thunkAP
         return thunkAPI.fulfillWithValue(data);
     } catch(err) {
         return err;
+    }
+});
+
+//게시글 상세 페이지 이동
+export const __getDetailPost = createAsyncThunk("GET_DETAIL_POST", async(postId, thunkAPI) => {
+    try {
+        const res = await axios.get(`http://43.200.182.245:8080/api/post/${postId}`,{
+            headers: {
+                'Authorization': `Bearer ${sessionStorage.getItem('token')}`,
+                'withCredentials': true,
+            }
+        });
+        return thunkAPI.fulfillWithValue(res.data);
+    } catch(err) {
+        return thunkAPI.rejectWithValue(err);
     }
 });
 
@@ -40,34 +70,40 @@ export const __likePost = createAsyncThunk("LIKE_POST", async(payload, thunkAPI)
     }
 })
 
-//게시글 상세 페이지 이동
-export const __getDetailPost = createAsyncThunk("GET_DETAIL_POST", async(postId, thunkAPI) => {
+
+  // 상세페이지에서 게시글 삭제
+  export const __deletePost = createAsyncThunk("DELETE_POST", async(postId, thunkAPI) => {
     try {
-        const res = await axios.get(`http://43.200.182.245:8080/api/post/${postId}`,{
+        await axios.delete(`http://43.200.182.245:8080/api/post/${postId}`, {
             headers: {
+                'Content-Type': 'application/json',
                 'Authorization': `Bearer ${sessionStorage.getItem('token')}`,
                 'withCredentials': true,
             }
-        });
-        return thunkAPI.fulfillWithValue(res.data);
-    } catch(err) {
-        return thunkAPI.rejectWithValue(err);
+        })
+        return thunkAPI.fulfillWithValue({postId})
+    } catch (err) {
+        return thunkAPI.rejectWithValue(err)
     }
-});
+  });
 
-//게시글 조회
-export const __getPost = createAsyncThunk(
-    "post/getPost",
-    async (_, thunkAPI) => {
-      try {
-        const {data} = await axios.get("http://43.200.182.245:8080/api/post")
-        .then(res=>res.data.check);
-        return thunkAPI.fulfillWithValue(data);
-      } catch (error) {
-        return thunkAPI.rejectWithValue(error);
-      }
+  //상세페이지에서 게시글 수정
+  export const __editPost = createAsyncThunk("UPDATE_POST", async(payload, thunkAPI) => {
+    try {
+        await axios.put(`http://43.200.182.245:8080/api/post/${payload.postId}`, payload.formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `Bearer ${sessionStorage.getItem('token')}`,
+                'withCredentials': true,
+            }
+        })
+        return thunkAPI.fulfillWithValue(payload)
+    } catch (err) {
+        return thunkAPI.rejectWithValue(err)
     }
-  );
+  });
+
+
 
 //무한스크롤
 export const __infiniteScroll = createAsyncThunk(
@@ -128,6 +164,7 @@ const postSlice = createSlice({
                 const new_post = {...state.posts[index], likeUsers: action.payload.data.check.data.likeUsers}
                 state.posts.splice(index, 1, new_post)
             }
+            console.log(action.payload)
         },
         [__likePost.rejected]: (state, action) => {
         },
@@ -137,6 +174,35 @@ const postSlice = createSlice({
         },
         [__getPost.rejected]: (state, action) => {
         },
+        //상세페이지 조회
+        [__getDetailPost.pending]: (state, action) => {
+            state.isLoading = true;
+        },
+        [__getDetailPost.fulfilled]: (state, action) => {
+            state.post = action.payload.check.data;
+            state.isLoading = false;
+        },
+        [__getDetailPost.rejected]: (state, action) => {
+        },
+        // 게시글 삭제
+        [__deletePost.pending]: (state, action) => {
+            state.isLoading = true;
+          },
+          [__deletePost.fulfilled]: (state, action) => {
+            state.isLoading = false;
+            state.success = action.payload;
+          },
+          [__deletePost.rejected]: (state, action) => {
+            state.isLoading = false;
+            state.error = action.payload;
+          },
+          //게시글 수정
+          [__editPost.fulfilled]: (state, action) => {
+            state.post = action.payload;
+          },
+          [__editPost.rejected]: (state, action) => {
+            state.error = action.payload;
+          },
         //무한 스크롤
         [__infiniteScroll.pending]: (state, action) => {
             state.isLoading = true;
@@ -147,16 +213,7 @@ const postSlice = createSlice({
         },
         [__infiniteScroll.rejected]: (state, action) => {
         },
-        //상세페이지 조회
-        [__getDetailPost.pending]: (state, action) => {
-            state.isLoading = true;
-        },
-        [__getDetailPost.fulfilled]: (state, action) => {
-            state.post = action.payload.check.data
-            state.isLoading = false;
-        },
-        [__getDetailPost.rejected]: (state, action) => {
-        },
+
         //댓글 작성
         [__postComment.pending]: (state, action) => {
             state.isLoading = true;

@@ -12,10 +12,10 @@ const Home = () => {
 
   useEffect(() => {
     dispatch(__getPost());
+    console.log(posts)
   }, [dispatch]);
 
   const { posts } = useSelector((state) => state.post);
-
   const onClickLikeHandler = (Id) => {
     dispatch(__likePost(Id));
   };
