@@ -57,7 +57,7 @@ const HomeScroll = () => {
               <span>{post.likeUsers.length}</span>
             </LikeBox>
             <Content>{post.content}</Content>
-            <CommentNum>{post.commentNum}</CommentNum>
+            <CommentNum>댓글 {post.commentNum}개</CommentNum>
           </Box>
           :
           <Box>
