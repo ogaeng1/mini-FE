@@ -3,7 +3,8 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import LoginPage from "../pages/LoginPage";
 import PostDetail from "../pages/PostDetail";
 import WritePost from "../pages/WritePost";
-import HomeScroll from "../pages/HomeScroll"
+import HomeScroll from "../pages/HomeScroll";
+import Home from "../pages/Home";
 
 const Router = () => {
   return (
